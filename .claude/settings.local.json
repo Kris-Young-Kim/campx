@@ -1,0 +1,17 @@
+{
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "context7",
+    "chrome-devtools",
+    "shadcn",
+    "@21st-dev/magic",
+    "Neon",
+    "cloudflare-documentation",
+    "cloudflare-bindings"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)"
+    ]
+  }
+}
