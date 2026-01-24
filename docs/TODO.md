@@ -185,23 +185,27 @@
 ## Phase 5: QR 체크인 시스템 (P1 - High)
 
 ### 5.1 QR 코드 생성
-- [ ] 의존성 설치: `pnpm add qrcode @types/qrcode`
-- [ ] `src/features/checkin/api/actions.ts` 생성
-- [ ] `generateQRCode(bookingId)` Server Action 구현
+- [ ] 의존성 설치: `pnpm add qrcode @types/qrcode html5-qrcode` (사용자가 직접 실행 필요)
+- [x] `src/features/checkin/api/actions.ts` 생성 ✅
+- [x] `generateQRCode(bookingId)` Server Action 구현 ✅
   - QR 데이터: `{ bookingId, userId, timestamp }`
   - Base64 이미지 반환
+- [x] `verifyAndCheckIn(qrDataString)` Server Action 구현 ✅
+  - QR 코드 데이터 검증 및 체크인 처리
 
 ### 5.2 체크인 페이지
-- [ ] `app/checkin/[bookingId]/page.tsx` 생성
-- [ ] QR 코드 표시 UI
-- [ ] 체크인 버튼 및 상태 업데이트 로직
-- [ ] QR 코드 표시 컴포넌트: `src/features/checkin/ui/qr-code-display.tsx`
+- [x] `app/checkin/[bookingId]/page.tsx` 생성 ✅
+- [x] QR 코드 표시 UI ✅
+- [x] 체크인 버튼 및 상태 업데이트 로직 ✅
+- [x] QR 코드 표시 컴포넌트: `src/features/checkin/ui/qr-code-display.tsx` ✅
+- [x] 예약 정보 표시 및 상태 관리 ✅
 
 ### 5.3 관리자 QR 스캔 페이지
-- [ ] `app/admin/scan/page.tsx` 생성
-- [ ] 모바일 웹 최적화
-- [ ] 카메라 접근 (Web API) 구현
-- [ ] QR 스캔 후 `booking.status` 업데이트
+- [x] `app/admin/scan/page.tsx` 생성 ✅
+- [x] 모바일 웹 최적화 ✅
+- [x] 카메라 접근 (Web API) 구현 ✅
+- [x] QR 스캔 후 `booking.status` 업데이트 ✅
+- [x] `html5-qrcode` 라이브러리 통합 ✅
 
 ---
 
