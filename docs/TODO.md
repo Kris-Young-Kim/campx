@@ -84,7 +84,11 @@
 - [x] Drizzle 인스턴스에 전체 스키마 등록 ✅
 
 ### 2.2 Server Actions 기본 구조
-- [ ] `src/features/user/api/actions.ts`: 사용자 프로필 저장, 조회
+- [x] `src/features/user/api/actions.ts`: 사용자 프로필 저장, 조회 ✅
+  - `getUserProfile()`: 현재 인증된 사용자 프로필 조회
+  - `updateUserProfile()`: 사용자 프로필 업데이트
+  - `createOrUpdateUserProfile()`: Clerk 사용자와 DB 사용자 동기화
+  - Public API: `src/features/user/index.ts` ✅
 - [ ] `src/features/booking/api/actions.ts`: 예약 생성, QR 체크인
 - [ ] `src/features/schedule/api/actions.ts`: AI 스케줄 생성 (핵심)
 - [ ] `src/features/node/api/actions.ts`: 노드 정보 조회
