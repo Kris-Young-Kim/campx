@@ -107,23 +107,23 @@ export function ScheduleDashboardPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-6xl space-y-6 p-6">
+    <div className="container mx-auto max-w-6xl space-y-4 md:space-y-6 p-4 md:p-6">
       <div>
-        <h1 className="text-3xl font-bold">스케줄 대시보드</h1>
-        <p className="mt-2 text-muted-foreground">
+        <h1 className="text-2xl md:text-3xl font-bold">스케줄 대시보드</h1>
+        <p className="mt-1 md:mt-2 text-sm md:text-base text-muted-foreground">
           일정을 타임라인과 맵으로 확인하세요
         </p>
       </div>
 
       <Tabs defaultValue="timeline" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="timeline" className="gap-2">
-            <Calendar className="h-4 w-4" />
-            타임라인
+        <TabsList className="w-full md:w-auto">
+          <TabsTrigger value="timeline" className="gap-1 md:gap-2 flex-1 md:flex-initial">
+            <Calendar className="h-3.5 w-3.5 md:h-4 md:w-4" />
+            <span className="text-sm md:text-base">타임라인</span>
           </TabsTrigger>
-          <TabsTrigger value="map" className="gap-2">
-            <MapIcon className="h-4 w-4" />
-            맵
+          <TabsTrigger value="map" className="gap-1 md:gap-2 flex-1 md:flex-initial">
+            <MapIcon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+            <span className="text-sm md:text-base">맵</span>
           </TabsTrigger>
         </TabsList>
 

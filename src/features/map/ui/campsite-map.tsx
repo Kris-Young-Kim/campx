@@ -101,6 +101,8 @@ export function CampsiteMap({
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [lastTouchDistance, setLastTouchDistance] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 노드 클릭 핸들러
@@ -150,6 +152,61 @@ export function CampsiteMap({
     [],
   );
 
+  // 터치 시작
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      // 단일 터치: 팬
+      setIsDragging(true);
+      setTouchStart({
+        x: e.touches[0].clientX - pan.x,
+        y: e.touches[0].clientY - pan.y,
+      });
+    } else if (e.touches.length === 2) {
+      // 두 손가락: 핀치 줌
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY,
+      );
+      setLastTouchDistance(distance);
+    }
+  }, [pan]);
+
+  // 터치 이동
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      e.preventDefault();
+      if (e.touches.length === 1 && isDragging && touchStart) {
+        // 단일 터치: 팬
+        setPan({
+          x: e.touches[0].clientX - touchStart.x,
+          y: e.touches[0].clientY - touchStart.y,
+        });
+      } else if (e.touches.length === 2 && lastTouchDistance !== null) {
+        // 두 손가락: 핀치 줌
+        const touch1 = e.touches[0];
+        const touch2 = e.touches[1];
+        const distance = Math.hypot(
+          touch2.clientX - touch1.clientX,
+          touch2.clientY - touch1.clientY,
+        );
+        const scaleDelta = distance / lastTouchDistance;
+        setScale((prev) => Math.max(0.5, Math.min(3, prev * scaleDelta)));
+        setLastTouchDistance(distance);
+      }
+    },
+    [isDragging, touchStart, lastTouchDistance],
+  );
+
+  // 터치 종료
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+    setTouchStart(null);
+    setLastTouchDistance(null);
+  }, []);
+
   // 좌표를 SVG 좌표계로 변환
   const transformCoordinates = useCallback(
     (node: Node) => {
@@ -178,12 +235,15 @@ export function CampsiteMap({
     <div className="relative w-full overflow-hidden rounded-lg border bg-muted">
       <div
         ref={containerRef}
-        className="relative h-[600px] w-full cursor-move touch-none"
+        className="relative h-[400px] md:h-[600px] w-full cursor-move touch-none select-none"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* 배경 이미지 */}
         <div className="absolute inset-0">
@@ -278,18 +338,20 @@ export function CampsiteMap({
         </svg>
 
         {/* 줌 컨트롤 */}
-        <div className="absolute bottom-4 right-4 flex flex-col gap-2 rounded-lg border bg-background/80 p-2 backdrop-blur-sm">
+        <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 flex flex-col gap-1.5 md:gap-2 rounded-lg border bg-background/90 p-1.5 md:p-2 backdrop-blur-sm shadow-lg">
           <button
             type="button"
             onClick={() => setScale((prev) => Math.min(3, prev * 1.2))}
-            className="rounded px-2 py-1 text-sm hover:bg-accent"
+            className="rounded px-2 py-1.5 md:py-1 text-sm md:text-base hover:bg-accent active:bg-accent touch-manipulation"
+            aria-label="확대"
           >
             +
           </button>
           <button
             type="button"
             onClick={() => setScale((prev) => Math.max(0.5, prev * 0.8))}
-            className="rounded px-2 py-1 text-sm hover:bg-accent"
+            className="rounded px-2 py-1.5 md:py-1 text-sm md:text-base hover:bg-accent active:bg-accent touch-manipulation"
+            aria-label="축소"
           >
             −
           </button>
@@ -299,7 +361,8 @@ export function CampsiteMap({
               setScale(1);
               setPan({ x: 0, y: 0 });
             }}
-            className="rounded px-2 py-1 text-xs hover:bg-accent"
+            className="rounded px-2 py-1 text-xs hover:bg-accent active:bg-accent touch-manipulation"
+            aria-label="리셋"
           >
             리셋
           </button>

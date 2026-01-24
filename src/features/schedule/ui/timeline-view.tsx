@@ -81,10 +81,10 @@ export function TimelineView({
       {/* 타임라인 */}
       <div className="relative">
         {/* 타임라인 라인 */}
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-border" />
+        <div className="absolute left-4 md:left-8 top-0 bottom-0 w-0.5 bg-border" />
 
         {/* 타임라인 항목 */}
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {sortedItems.map((item, index) => {
             const startTime = new Date(item.startTime);
             const endTime = new Date(item.endTime);
@@ -94,16 +94,16 @@ export function TimelineView({
               <div
                 key={item.id}
                 className={cn(
-                  'relative flex gap-4 cursor-pointer transition-all',
-                  isSelected && 'scale-105',
+                  'relative flex gap-2 md:gap-4 cursor-pointer transition-all touch-manipulation',
+                  isSelected && 'scale-[1.02] md:scale-105',
                 )}
                 onClick={() => onItemClick?.(item)}
               >
                 {/* 타임라인 점 */}
-                <div className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-background bg-card">
+                <div className="relative z-10 flex h-12 w-12 md:h-16 md:w-16 shrink-0 items-center justify-center rounded-full border-2 border-background bg-card">
                   <div
                     className={cn(
-                      'h-3 w-3 rounded-full',
+                      'h-2.5 w-2.5 md:h-3 md:w-3 rounded-full',
                       isSelected ? 'bg-primary' : 'bg-muted-foreground',
                     )}
                   />
@@ -116,25 +116,29 @@ export function TimelineView({
                     isSelected && 'ring-2 ring-primary',
                   )}
                 >
-                  <CardContent className="pt-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold">{item.activityName}</h3>
-                          <Badge variant="outline" className="text-xs">
+                  <CardContent className="p-4 md:pt-6">
+                    <div className="flex items-start justify-between gap-2 md:gap-4">
+                      <div className="flex-1 space-y-1.5 md:space-y-2 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-semibold text-sm md:text-base truncate">
+                            {item.activityName}
+                          </h3>
+                          <Badge variant="outline" className="text-xs shrink-0">
                             #{item.sequenceOrder}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Clock className="h-4 w-4" />
-                          <span>
+                        <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
+                          <Clock className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
+                          <span className="truncate">
                             {format(startTime, 'HH:mm')} -{' '}
                             {format(endTime, 'HH:mm')}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <MapPin className="h-4 w-4" />
-                          <span>노드 ID: {item.nodeId.slice(0, 8)}...</span>
+                        <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
+                          <MapPin className="h-3 w-3 md:h-4 md:w-4 shrink-0" />
+                          <span className="truncate">
+                            노드 ID: {item.nodeId.slice(0, 8)}...
+                          </span>
                         </div>
                       </div>
                     </div>
