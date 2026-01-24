@@ -10,6 +10,8 @@ export {
   getSchedulesByBookingId,
   getActiveSchedule,
   toggleScheduleActive,
+  generateSchedule,
   type Schedule,
   type ScheduleItem,
+  type GenerateScheduleInput,
 } from './api/actions';

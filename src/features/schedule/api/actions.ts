@@ -33,6 +33,7 @@ import { bookings } from '@/entities/booking';
 import { users } from '@/entities/user';
 import { requireAuth, getSession } from '@/shared/lib/auth-server';
 import type { ActionResult } from '@/features/user/api/actions';
+import type { Node } from '@/features/node/api/actions';
 
 /**
  * 스케줄 항목 타입
@@ -287,20 +288,190 @@ export async function toggleScheduleActive(
 }
 
 /**
- * TODO (Phase 3): AI 스케줄 생성 함수
+ * 스케줄 생성 입력 타입
+ */
+export type GenerateScheduleInput = {
+  startNodeId?: string; // 시작 노드 ID (기본값: 사용자의 캠핑 사이트)
+  maxNodes?: number; // 최대 노드 개수 (기본값: 10)
+};
+
+/**
+ * AI 스케줄을 생성합니다.
  * 
  * @param bookingId 예약 ID
- * @param userInput 사용자 입력 (선호 활동, 제약 조건 등)
+ * @param input 스케줄 생성 옵션
  * @returns 생성된 스케줄
  */
-// export async function generateSchedule(
-//   bookingId: string,
-//   userInput: GenerateScheduleInput,
-// ): Promise<ActionResult<Schedule>> {
-//   // Phase 3에서 구현 예정
-//   // 1. 사용자 벡터 조회/생성
-//   // 2. pgvector로 유사 노드 추출
-//   // 3. 피로도 페널티 계산
-//   // 4. 최적 경로 산출
-//   // 5. schedules, schedule_items 저장
-// }
+export async function generateSchedule(
+  bookingId: string,
+  input: GenerateScheduleInput = {},
+): Promise<ActionResult<Schedule>> {
+  try {
+    const session = await requireAuth();
+
+    // 사용자 프로필 확인
+    const userProfile = await db
+      .select()
+      .from(users)
+      .where(eq(users.clerkUserId, session.user.id))
+      .limit(1);
+
+    if (userProfile.length === 0) {
+      return {
+        ok: false,
+        error: '사용자 프로필을 찾을 수 없습니다.',
+      };
+    }
+
+    // 예약 확인
+    const [booking] = await db
+      .select()
+      .from(bookings)
+      .where(
+        and(
+          eq(bookings.id, bookingId),
+          eq(bookings.userId, userProfile[0].id),
+        ),
+      )
+      .limit(1);
+
+    if (!booking) {
+      return {
+        ok: false,
+        error: '예약을 찾을 수 없습니다.',
+      };
+    }
+
+    // 사용자 벡터 확인
+    if (!userProfile[0].preferenceVector) {
+      return {
+        ok: false,
+        error: '사용자 선호 벡터가 설정되지 않았습니다. 온보딩 설문을 먼저 완료해주세요.',
+      };
+    }
+
+    // AI 스케줄러 로직 import
+    const { findSimilarNodes, findOptimalPath } = await import(
+      '@/shared/lib/ai-scheduler'
+    );
+    const { getNodeById } = await import('@/features/node/api/actions');
+
+    // 시작 노드 확인 (기본값: SITE 타입 노드 중 첫 번째)
+    let startNode: Node;
+    if (input.startNodeId) {
+      const nodeResult = await getNodeById(input.startNodeId);
+      if (!nodeResult.ok || !nodeResult.data) {
+        return {
+          ok: false,
+          error: '시작 노드를 찾을 수 없습니다.',
+        };
+      }
+      startNode = nodeResult.data;
+    } else {
+      // SITE 타입 노드 중 첫 번째를 시작 노드로 사용
+      const { getNodesByType } = await import('@/features/node/api/actions');
+      const siteNodesResult = await getNodesByType('SITE');
+      if (!siteNodesResult.ok || siteNodesResult.data.length === 0) {
+        return {
+          ok: false,
+          error: '캠핑 사이트를 찾을 수 없습니다.',
+        };
+      }
+      startNode = siteNodesResult.data[0]!;
+    }
+
+    // 1. 사용자 벡터로 유사 노드 추출
+    const userVector = userProfile[0].preferenceVector as unknown as number[];
+    const similarNodes = await findSimilarNodes(userVector, 30);
+
+    // 2. 최적 경로 산출
+    const optimalPath = findOptimalPath(
+      similarNodes,
+      startNode,
+      userProfile[0].healthCondition ?? 5,
+      input.maxNodes ?? 10,
+    );
+
+    if (optimalPath.nodes.length === 0) {
+      return {
+        ok: false,
+        error: '스케줄을 생성할 수 있는 노드가 없습니다.',
+      };
+    }
+
+    // 3. 시간 배분 (체크인부터 체크아웃까지)
+    const checkInTime = new Date(booking.checkIn);
+    const checkOutTime = new Date(booking.checkOut);
+    const totalDuration = checkOutTime.getTime() - checkInTime.getTime();
+    const timePerNode = totalDuration / optimalPath.nodes.length;
+
+    // 4. 스케줄 생성
+    const scheduleId = crypto.randomUUID();
+    const [schedule] = await db
+      .insert(schedules)
+      .values({
+        id: scheduleId,
+        bookingId: booking.id,
+        totalFatigueScore: optimalPath.totalFatigueScore,
+        isActive: true,
+        updatedAt: new Date(),
+      })
+      .returning();
+
+    // 5. 스케줄 항목 생성
+    const scheduleItemsData = optimalPath.nodes.map((pathNode, index) => {
+      const startTime = new Date(checkInTime.getTime() + timePerNode * index);
+      const endTime = new Date(
+        checkInTime.getTime() + timePerNode * (index + 1),
+      );
+
+      // 활동명 생성 (노드 타입과 이름 기반)
+      let activityName = pathNode.node.name;
+      if (pathNode.node.type === 'ACTIVITY') {
+        activityName = `${pathNode.node.name} 체험`;
+      } else if (pathNode.node.type === 'WC') {
+        activityName = '화장실 이용';
+      } else if (pathNode.node.type === 'STORE') {
+        activityName = `${pathNode.node.name} 방문`;
+      }
+
+      return {
+        id: crypto.randomUUID(),
+        scheduleId: schedule.id,
+        nodeId: pathNode.node.id,
+        sequenceOrder: index + 1,
+        startTime,
+        endTime,
+        activityName,
+        updatedAt: new Date(),
+      };
+    });
+
+    await db.insert(scheduleItems).values(scheduleItemsData);
+
+    // 6. 생성된 스케줄 조회 (항목 포함)
+    const result = await getSchedulesByBookingId(bookingId);
+    if (!result.ok) {
+      return result;
+    }
+
+    const createdSchedule = result.data.find((s) => s.id === scheduleId);
+    if (!createdSchedule) {
+      return {
+        ok: false,
+        error: '스케줄 생성 후 조회에 실패했습니다.',
+      };
+    }
+
+    return {
+      ok: true,
+      data: createdSchedule,
+    };
+  } catch (error) {
+    console.error('Failed to generate schedule:', error);
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : '스케줄 생성에 실패했습니다.',
+    };
+  }
+}

@@ -112,29 +112,40 @@
 ## Phase 3: AI 스케줄러 엔진 (P0 - Critical)
 
 ### 3.1 벡터 유사도 계산 로직
-- [ ] `src/shared/lib/ai-scheduler.ts` 파일 생성
-- [ ] `calculateCosineSimilarity(userVector, nodeVector)` 함수 구현
-  - pgvector 쿼리 사용
-- [ ] `calculateFatiguePenalty(distance, elevationDelta)` 함수 구현
-  - 특허 수식 3 적용
-- [ ] `findOptimalPath(nodes, userProfile)` 함수 구현
-  - TSP 변형 알고리즘
+- [x] `src/shared/lib/ai-scheduler.ts` 파일 생성 ✅
+- [x] `calculateCosineSimilarity(userVector, nodeVector)` 함수 구현 ✅
+  - pgvector 쿼리 사용 (cosine distance 연산자 `<=>` 활용)
+- [x] `calculateFatiguePenalty(distance, elevationDelta)` 함수 구현 ✅
+  - 특허 수식 3 적용: `penalty = distance * (1 + elevation_delta / 100) * health_factor`
+- [x] `findOptimalPath(nodes, userProfile)` 함수 구현 ✅
+  - TSP 변형 알고리즘 (그리디 기반 최적 경로 탐색)
+- [x] `findSimilarNodes(userVector, limit)` 함수 구현 ✅
+  - pgvector를 사용한 유사 노드 검색
 
 ### 3.2 스케줄 생성 Server Action
-- [ ] `generateSchedule(bookingId, userInput)` 메인 함수 구현
-  1. 사용자 벡터 조회/생성
-  2. pgvector로 유사 노드 추출
-  3. 피로도 페널티 계산
-  4. 최적 경로 산출
-  5. `schedules`, `schedule_items` 저장
-- [ ] 파일: `src/features/schedule/api/actions.ts`
+- [x] `generateSchedule(bookingId, userInput)` 메인 함수 구현 ✅
+  1. 사용자 벡터 조회/생성 ✅
+  2. pgvector로 유사 노드 추출 ✅
+  3. 피로도 페널티 계산 ✅
+  4. 최적 경로 산출 ✅
+  5. `schedules`, `schedule_items` 저장 ✅
+  6. 시간 배분 (체크인~체크아웃) ✅
+- [x] 파일: `src/features/schedule/api/actions.ts` ✅
+- [x] Public API 업데이트: `src/features/schedule/index.ts` ✅
 
 ### 3.3 온보딩 설문 폼
-- [ ] `src/features/onboarding/ui/survey-form.tsx` 생성
-- [ ] react-hook-form + zod 검증 설정
-- [ ] 질문 구성: 컨디션(피로도), 동반자, 선호 활동
-- [ ] 제출 시 사용자 벡터 생성 및 저장 로직
-- [ ] 온보딩 페이지: `src/pages/onboarding/ui/onboarding-page.tsx`
+- [x] `src/features/onboarding/ui/survey-form.tsx` 생성 ✅
+- [x] react-hook-form + zod 검증 설정 ✅
+- [x] 질문 구성: 컨디션(피로도), 동반자, 선호 활동 ✅
+  - 컨디션: 1-10 스케일 (Slider)
+  - 가족 구성원 수: 1-10명 (Slider)
+  - 반려동물 유무: Checkbox
+  - 선호 활동: Nature, Activity, Rest 각각 0-10 (Slider)
+- [x] 제출 시 사용자 벡터 생성 및 저장 로직 ✅
+  - `src/shared/lib/user-vector.ts`: 벡터 생성 유틸리티
+  - `updateUserProfile()` Server Action 호출
+- [x] 온보딩 페이지: `src/pages/onboarding/ui/onboarding-page.tsx` ✅
+- [x] Public API: `src/features/onboarding/index.ts` ✅
 
 ---
 
