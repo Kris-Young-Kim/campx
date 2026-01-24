@@ -151,27 +151,34 @@
 
 ## Phase 4: 2.5D 인터랙티브 맵 (P0 - Critical)
 
-### 4.1 React Three Fiber 설정
-- [ ] 의존성 설치: `pnpm add @react-three/fiber @react-three/drei three`
-- [ ] Three.js 타입 설치: `pnpm add -D @types/three`
+### 4.1 맵 구현 방식
+- [x] SVG 기반 구현 (가볍고 빠른 렌더링) ✅
+  - ⚠️ React Three Fiber 대신 SVG 사용 (MVP 단계에서 더 적합)
+  - 향후 필요시 Three.js로 업그레이드 가능
 
 ### 4.2 맵 컴포넌트 구조
-- [ ] `src/features/map/ui/campsite-map.tsx` 생성
-- [ ] 배경: 항공샷 이미지 (`public/maps/`) 통합
-- [ ] 핀 레이어: Three.js로 노드 위치 표시
-- [ ] 동선 표시: 스케줄에 따른 경로 렌더링
-- [ ] 인터랙션: 핀 클릭 시 모달 (ShadCN Dialog)
+- [x] `src/features/map/ui/campsite-map.tsx` 생성 ✅
+- [x] 배경: 항공샷 이미지 (`public/maps/`) 통합 ✅
+- [x] 핀 레이어: SVG로 노드 위치 표시 (타입별 색상 구분) ✅
+- [x] 동선 표시: 스케줄에 따른 경로 렌더링 (polyline) ✅
+- [x] 인터랙션: 핀 클릭 시 모달 (ShadCN Dialog) ✅
+- [x] 줌/팬 기능: 마우스 휠 줌, 드래그 팬 ✅
+- [x] Public API: `src/features/map/index.ts` ✅
 
 ### 4.3 노드 상세 모달
-- [ ] `src/features/map/ui/node-detail-modal.tsx` 생성
-- [ ] 노드 정보 표시 (이름, 타입, 설명)
-- [ ] 거리 계산 (현재 위치 기준)
-- [ ] 예상 소요 시간 표시
+- [x] `src/features/map/ui/node-detail-modal.tsx` 생성 ✅
+- [x] 노드 정보 표시 (이름, 타입, 설명) ✅
+- [x] 거리 계산 (현재 위치 기준, 향후 GPS 연동) ✅
+- [x] 예상 소요 시간 표시 (보행 속도 기준) ✅
+- [x] 좌표 및 고도 정보 표시 ✅
 
 ### 4.4 대시보드 통합
-- [ ] `src/pages/dashboard/ui/dashboard-page.tsx` 업데이트
-- [ ] 타임라인 뷰와 맵 뷰 토글 구현
-- [ ] 스케줄 항목 클릭 시 맵에서 해당 노드 하이라이트
+- [x] `src/pages/schedule-dashboard/ui/schedule-dashboard-page.tsx` 생성 ✅
+- [x] 타임라인 뷰와 맵 뷰 토글 구현 (ShadCN Tabs) ✅
+- [x] 스케줄 항목 클릭 시 맵에서 해당 노드 하이라이트 ✅
+- [x] 타임라인 뷰 컴포넌트: `src/features/schedule/ui/timeline-view.tsx` ✅
+- [x] 양방향 인터랙션: 맵에서 노드 클릭 시 타임라인 항목도 하이라이트 ✅
+- [x] Public API: `src/pages/schedule-dashboard/index.ts` ✅
 
 ---
 
