@@ -218,10 +218,13 @@
 - [ ] 템플릿 메시지 구성
 
 ### 6.2 스케줄 알림 로직
-- [ ] `src/features/notification/api/actions.ts` 생성
-- [ ] 매너타임 시작 알림 (체크인 후 N시간)
-- [ ] 체험 시간 임박 알림 (시작 30분 전)
-- [ ] Cron Job 또는 Server Action 주기적 실행 설정
+- [x] `src/features/notification/api/actions.ts` 생성 ✅
+- [x] 매너타임 시작 알림 대상 조회 (체크인 후 지정 시간) ✅
+- [x] 체험 시간 임박 알림 대상 조회 (시작 30분 전) ✅
+- [x] API 라우트 생성 (`/api/notifications/check`) ✅
+- [x] Public API 생성 (`src/features/notification/index.ts`) ✅
+- [ ] Cron Job 또는 Server Action 주기적 실행 설정 (Vercel Cron 또는 외부 스케줄러)
+- [ ] TODO (Post-MVP): 카카오 알림톡 API 연동 후 실제 발송 로직 추가
 
 ---
 
