@@ -89,9 +89,23 @@
   - `updateUserProfile()`: 사용자 프로필 업데이트
   - `createOrUpdateUserProfile()`: Clerk 사용자와 DB 사용자 동기화
   - Public API: `src/features/user/index.ts` ✅
-- [ ] `src/features/booking/api/actions.ts`: 예약 생성, QR 체크인
-- [ ] `src/features/schedule/api/actions.ts`: AI 스케줄 생성 (핵심)
-- [ ] `src/features/node/api/actions.ts`: 노드 정보 조회
+- [x] `src/features/booking/api/actions.ts`: 예약 생성, QR 체크인 ✅
+  - `createBooking()`: 예약 생성
+  - `getUserBookings()`: 사용자 예약 목록 조회
+  - `getBookingById()`: 예약 ID로 조회
+  - `checkInBooking()`: QR 체크인 (상태 업데이트)
+  - Public API: `src/features/booking/index.ts` ✅
+- [x] `src/features/schedule/api/actions.ts`: 스케줄 조회 및 관리 (기본 구조) ✅
+  - `getSchedulesByBookingId()`: 예약별 스케줄 조회
+  - `getActiveSchedule()`: 활성 스케줄 조회
+  - `toggleScheduleActive()`: 스케줄 활성화/비활성화
+  - ⚠️ AI 스케줄 생성 로직은 Phase 3에서 구현 예정
+  - Public API: `src/features/schedule/index.ts` ✅
+- [x] `src/features/node/api/actions.ts`: 노드 정보 조회 ✅
+  - `getNodes()`: 모든 노드 조회 (타입, 검색 필터 지원)
+  - `getNodeById()`: 노드 ID로 조회
+  - `getNodesByType()`: 타입별 노드 조회
+  - Public API: `src/features/node/index.ts` ✅
 
 ---
 
