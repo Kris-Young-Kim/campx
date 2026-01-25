@@ -1,4 +1,37 @@
+# 빌드 산출물
 **/build/**
 **/dist/**
+**/.next/**
+**/out/**
+**/node_modules/**
+
+# 테스트 파일
 **/*.test.ts
-node_modules/
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/__tests__/**
+
+# 문서 및 설정 파일 (일부만 제외)
+.claude/**
+.cursor/**
+.github/**
+docs/**
+drizzle/**
+public/**
+
+# 기타
+*.log
+*.lock
+.env*
+*.tsbuildinfo
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# 마이그레이션 파일
+**/migrations/**
+**/meta/**
+
+# 스크립트 (선택적)
+scripts/**

@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { Sparkles, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -61,9 +62,12 @@ export function CTASection() {
               <Button
                 size="lg"
                 className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg"
+                asChild
               >
-                Start Free Trial
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <Link href="/onboarding">
+                  Start Free Trial
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
               </Button>
               <Button
                 size="lg"

@@ -24,8 +24,8 @@
 
 'use server';
 
-import { eq } from 'drizzle-orm';
-import { db } from '@/shared/api/db';
+import { eq, sql as drizzleSql } from 'drizzle-orm';
+import { db, sql } from '@/shared/api/db';
 import { users } from '@/entities/user';
 import { getSession, requireAuth } from '@/shared/lib/auth-server';
 import type { ClerkAuthUser } from '@/shared/lib/auth-server';
@@ -76,10 +76,44 @@ export type UpdateUserProfileInput = {
  */
 export async function getUserProfile(): Promise<ActionResult<UserProfile | null>> {
   try {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:77',message:'getUserProfile entry',data:{hasDb:!!db,hasSql:!!sql,hasDatabaseUrl:!!process.env.DATABASE_URL},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
     const session = await getSession();
+
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:80',message:'Session retrieved',data:{hasSession:!!session,userId:session?.user?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
 
     if (!session) {
       return { ok: true, data: null };
+    }
+
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:88',message:'Before query execution',data:{clerkUserId:session.user.id,queryType:'select from users where clerk_user_id'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
+
+    // Check if clerk_user_id column exists
+    try {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:92',message:'Checking column existence',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      const columnCheck = await sql<{ exists: boolean }>`
+        SELECT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_schema = 'public' 
+          AND table_name = 'users' 
+          AND column_name = 'clerk_user_id'
+        ) as exists
+      `;
+      const columnExists = columnCheck[0]?.exists ?? false;
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:101',message:'Column existence check result',data:{columnExists,columnCheckResult:columnCheck[0]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+    } catch (checkError) {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:104',message:'Column check failed',data:{error:checkError instanceof Error?checkError.message:String(checkError),stack:checkError instanceof Error?checkError.stack:undefined},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
     }
 
     const userProfile = await db
@@ -87,6 +121,10 @@ export async function getUserProfile(): Promise<ActionResult<UserProfile | null>
       .from(users)
       .where(eq(users.clerkUserId, session.user.id))
       .limit(1);
+
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:110',message:'Query executed successfully',data:{resultCount:userProfile.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
 
     if (userProfile.length === 0) {
       return { ok: true, data: null };
@@ -116,6 +154,9 @@ export async function getUserProfile(): Promise<ActionResult<UserProfile | null>
       },
     };
   } catch (error) {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:118',message:'Query error caught',data:{errorMessage:error instanceof Error?error.message:String(error),errorName:error instanceof Error?error.name:typeof error,errorStack:error instanceof Error?error.stack:undefined,errorString:String(error)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
     console.error('Failed to get user profile:', error);
     return {
       ok: false,
@@ -151,28 +192,117 @@ export async function updateUserProfile(
       updateData.image = input.image;
     }
     if (input.preferenceVector !== undefined) {
-      // pgvector 타입으로 변환 (Drizzle이 자동 처리하지만 명시적으로 처리)
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:153',message:'preferenceVector before conversion',data:{preferenceVector:input.preferenceVector,type:typeof input.preferenceVector,isArray:Array.isArray(input.preferenceVector)},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      // pgvector 타입으로 변환 - Drizzle customType의 toDriver가 자동으로 호출됨
+      // 배열을 그대로 전달하면 customType의 toDriver가 JSON.stringify로 변환
       updateData.preferenceVector = input.preferenceVector as unknown as typeof users.$inferInsert.preferenceVector;
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:158',message:'preferenceVector after conversion',data:{preferenceVector:updateData.preferenceVector,type:typeof updateData.preferenceVector},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
     }
-    if (input.healthCondition !== undefined) {
-      updateData.healthCondition = input.healthCondition;
-    }
-    if (input.hasPet !== undefined) {
-      updateData.hasPet = input.hasPet;
-    }
-    if (input.familySize !== undefined) {
-      updateData.familySize = input.familySize;
+    // 컬럼 존재 여부 확인 (health_condition, has_pet, family_size)
+    // 컬럼이 없으면 해당 필드를 업데이트하지 않음
+    try {
+      const columnCheck = await sql<{ exists: boolean }>`
+        SELECT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_schema = 'public' 
+          AND table_name = 'users' 
+          AND column_name = 'health_condition'
+        ) as exists
+      `;
+      const hasHealthCondition = columnCheck[0]?.exists ?? false;
+
+      if (hasHealthCondition) {
+        if (input.healthCondition !== undefined) {
+          updateData.healthCondition = input.healthCondition;
+        }
+        if (input.hasPet !== undefined) {
+          updateData.hasPet = input.hasPet;
+        }
+        if (input.familySize !== undefined) {
+          updateData.familySize = input.familySize;
+        }
+      }
+      // 컬럼이 없으면 해당 필드들을 무시하고 계속 진행
+    } catch (checkError) {
+      // 컬럼 확인 실패 시 해당 필드들을 제외하고 계속 진행
+      console.warn('Failed to check column existence, skipping health_condition, has_pet, family_size:', checkError);
     }
     if (input.bioDataJson !== undefined) {
       updateData.bioDataJson = input.bioDataJson as typeof users.$inferInsert.bioDataJson;
     }
 
-    // 사용자 프로필 업데이트
-    const updatedProfiles = await db
-      .update(users)
-      .set(updateData)
-      .where(eq(users.clerkUserId, session.user.id))
-      .returning();
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:171',message:'Before DB update',data:{updateData:JSON.stringify(updateData),hasPreferenceVector:input.preferenceVector!==undefined,clerkUserId:session.user.id},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
+    
+    // preference_vector가 있으면 별도로 처리 (Neon HTTP에서 customType이 제대로 작동하지 않을 수 있음)
+    let updatedProfiles;
+    if (input.preferenceVector !== undefined) {
+      // preference_vector를 제외한 나머지 필드 업데이트
+      const { preferenceVector: _, ...restUpdateData } = updateData;
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:185',message:'restUpdateData prepared',data:{restUpdateData:JSON.stringify(restUpdateData),keys:Object.keys(restUpdateData)},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+      // #endregion
+      if (Object.keys(restUpdateData).length > 0) {
+        try {
+          // #region agent log
+          fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:190',message:'Updating rest fields',data:{fieldCount:Object.keys(restUpdateData).length},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+          // #endregion
+          await db
+            .update(users)
+            .set(restUpdateData)
+            .where(eq(users.clerkUserId, session.user.id));
+          // #region agent log
+          fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:197',message:'Rest fields updated successfully',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+          // #endregion
+        } catch (restError) {
+          // #region agent log
+          fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:200',message:'Rest fields update failed',data:{error:restError instanceof Error?restError.message:String(restError)},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+          // #endregion
+          throw restError;
+        }
+      }
+      // preference_vector는 SQL로 직접 업데이트
+      const vectorString = JSON.stringify(input.preferenceVector);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:206',message:'Updating preference_vector with SQL',data:{vectorString:vectorString},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      try {
+        await sql`
+          UPDATE users 
+          SET preference_vector = ${vectorString}::vector(3) 
+          WHERE clerk_user_id = ${session.user.id}
+        `;
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:212',message:'preference_vector updated successfully',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+      } catch (vectorError) {
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:216',message:'preference_vector update failed',data:{error:vectorError instanceof Error?vectorError.message:String(vectorError)},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+        throw vectorError;
+      }
+      // 업데이트된 프로필 조회
+      updatedProfiles = await db
+        .select()
+        .from(users)
+        .where(eq(users.clerkUserId, session.user.id))
+        .limit(1);
+    } else {
+      // preference_vector가 없으면 일반 업데이트
+      updatedProfiles = await db
+        .update(users)
+        .set(updateData)
+        .where(eq(users.clerkUserId, session.user.id))
+        .returning();
+    }
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:195',message:'After DB update',data:{updatedCount:updatedProfiles.length,hasError:false},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
 
     if (updatedProfiles.length === 0) {
       return {
@@ -205,6 +335,9 @@ export async function updateUserProfile(
       },
     };
   } catch (error) {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:207',message:'DB update error',data:{error:error instanceof Error?error.message:String(error),stack:error instanceof Error?error.stack:undefined},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
     console.error('Failed to update user profile:', error);
     return {
       ok: false,

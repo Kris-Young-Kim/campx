@@ -60,11 +60,11 @@ export function GNB() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" className="text-foreground">
-            로그인
+          <Button variant="ghost" className="text-foreground" asChild>
+            <Link href="/auth/sign-in">로그인</Link>
           </Button>
-          <Button className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-6">
-            시작하기
+          <Button className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-6" asChild>
+            <Link href="/onboarding">시작하기</Link>
           </Button>
         </div>
 
@@ -96,11 +96,15 @@ export function GNB() {
                 ))}
               </nav>
               <div className="flex flex-col gap-3 mt-4">
-                <Button variant="outline" className="w-full bg-transparent">
-                  로그인
+                <Button variant="outline" className="w-full bg-transparent" asChild>
+                  <Link href="/auth/sign-in" onClick={() => setMobileOpen(false)}>
+                    로그인
+                  </Link>
                 </Button>
-                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                  시작하기
+                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90" asChild>
+                  <Link href="/onboarding" onClick={() => setMobileOpen(false)}>
+                    시작하기
+                  </Link>
                 </Button>
               </div>
             </div>

@@ -1,9 +1,44 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx", "*.md"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.tsx",
+    "hooks/**/*.ts",
+    "lib/**/*.ts",
+    "*.config.ts",
+    "*.config.js",
+    "*.config.mjs",
+    "tsconfig.json",
+    "package.json",
+    "tailwind.config.ts",
+    "biome.json",
+    "components.json",
+    "README.md",
+    "AGENTS.md"
+  ],
   "ignore": {
-    "customPatterns": ["**/*.test.ts", "dist/**", ".next/**"]
+    "customPatterns": [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
+      "**/__tests__/**",
+      "dist/**",
+      ".next/**",
+      "node_modules/**",
+      ".claude/**",
+      ".cursor/**",
+      ".github/**",
+      "docs/**",
+      "drizzle/**",
+      "public/**",
+      "scripts/**",
+      "**/meta/**"
+    ]
   },
   "output": {
-    "compress": true
+    "compress": false
   }
 }

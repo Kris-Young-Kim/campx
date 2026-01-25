@@ -14,14 +14,31 @@
  * - @/features/map: 맵 컴포넌트
  * - @/features/node: 노드 데이터
  * - @/features/booking: 예약 데이터
+ * - @/shared/ui: Sidebar 컴포넌트
  */
 
 'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Calendar, Map as MapIcon, Loader2 } from 'lucide-react';
+import { Calendar, Map as MapIcon, Loader2, Home, LayoutDashboard, User } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/shared/ui/sidebar';
 import { TimelineView } from '@/features/schedule/ui';
 import { CampsiteMap } from '@/features/map';
 import { getActiveSchedule } from '@/features/schedule';
@@ -30,7 +47,31 @@ import { getUserBookings } from '@/features/booking';
 import type { Schedule, ScheduleItem } from '@/features/schedule/api/actions';
 import type { Node } from '@/features/node/api/actions';
 
+const navigationItems = [
+  {
+    title: '홈',
+    url: '/',
+    icon: Home,
+  },
+  {
+    title: '대시보드',
+    url: '/dashboard',
+    icon: LayoutDashboard,
+  },
+  {
+    title: '맞춤 질문',
+    url: '/onboarding',
+    icon: User,
+  },
+  {
+    title: '스케줄',
+    url: '/schedule',
+    icon: Calendar,
+  },
+];
+
 export function ScheduleDashboardPage() {
+  const pathname = usePathname();
   const [activeSchedule, setActiveSchedule] = useState<Schedule | null>(null);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,36 +119,28 @@ export function ScheduleDashboardPage() {
     setSelectedNodeId(item.nodeId);
   };
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto max-w-6xl py-8 px-4">
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+  const loadingContent = (
+    <div className="flex items-center justify-center py-12">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+    </div>
+  );
+
+  const emptyContent = (
+    <Card>
+      <CardContent className="pt-6">
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Calendar className="h-12 w-12 text-muted-foreground/50 mb-4" />
+          <h3 className="text-lg font-semibold mb-2">활성 스케줄이 없습니다</h3>
+          <p className="text-sm text-muted-foreground">
+            예약을 생성하고 AI 스케줄을 생성해보세요.
+          </p>
         </div>
-      </div>
-    );
-  }
+      </CardContent>
+    </Card>
+  );
 
-  if (!activeSchedule) {
-    return (
-      <div className="container mx-auto max-w-6xl py-8 px-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <Calendar className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">활성 스케줄이 없습니다</h3>
-              <p className="text-sm text-muted-foreground">
-                예약을 생성하고 AI 스케줄을 생성해보세요.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container mx-auto max-w-6xl space-y-4 md:space-y-6 p-4 md:p-6">
+  const mainContent = activeSchedule ? (
+    <div className="space-y-4 md:space-y-6">
       <div>
         <h1 className="text-2xl md:text-3xl font-bold">스케줄 대시보드</h1>
         <p className="mt-1 md:mt-2 text-sm md:text-base text-muted-foreground">
@@ -168,5 +201,50 @@ export function ScheduleDashboardPage() {
         </TabsContent>
       </Tabs>
     </div>
+  ) : emptyContent;
+
+  return (
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <div className="flex items-center gap-2 px-2 py-4">
+            <SidebarTrigger />
+            <h2 className="text-lg font-semibold">CampX</h2>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>메뉴</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navigationItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = pathname === item.url;
+                  return (
+                    <SidebarMenuItem key={item.url}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive}
+                        tooltip={item.title}
+                      >
+                        <Link href={item.url}>
+                          <Icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <div className="container mx-auto max-w-6xl space-y-4 md:space-y-6 p-4 md:p-6">
+          {isLoading ? loadingContent : mainContent}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

@@ -24,4 +24,4 @@ if (process.env.DATABASE_URL) {
   db = drizzle(sql, { schema });
 }
 
-export { db };
+export { db, sql };
