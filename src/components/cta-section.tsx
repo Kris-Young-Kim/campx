@@ -36,9 +36,9 @@ export function CTASection() {
               transition={{ delay: 0.3 }}
               className="text-3xl md:text-5xl lg:text-6xl font-bold text-secondary-foreground mb-6 text-balance"
             >
-              Ready for Your
+              최고의 캠핑 여행을
               <br />
-              Best Camping Trip?
+              준비하셨나요?
             </motion.h2>
 
             <motion.p
@@ -48,7 +48,7 @@ export function CTASection() {
               transition={{ delay: 0.4 }}
               className="text-secondary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto mb-10"
             >
-              Join thousands of happy campers who have transformed their outdoor experience with CampX.
+              CampX로 야외 경험을 변화시킨 수천 명의 행복한 캠퍼들과 함께하세요.
             </motion.p>
 
             <motion.div
@@ -62,7 +62,7 @@ export function CTASection() {
                 size="lg"
                 className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg"
               >
-                Start Free Trial
+                무료 체험 시작하기
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
               <Button
@@ -70,7 +70,7 @@ export function CTASection() {
                 variant="outline"
                 className="bg-transparent border-2 border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 rounded-full px-8 py-6 text-lg font-semibold"
               >
-                Contact Sales
+                영업팀 문의
               </Button>
             </motion.div>
           </div>

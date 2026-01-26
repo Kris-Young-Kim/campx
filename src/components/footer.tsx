@@ -5,10 +5,10 @@ import { motion } from "framer-motion"
 import { Tent, Twitter, Instagram, Youtube, Github } from "lucide-react"
 
 const footerLinks = {
-  Product: ["Features", "Pricing", "Demo", "Mobile App"],
-  Company: ["About Us", "Careers", "Blog", "Press"],
-  Resources: ["Help Center", "Documentation", "Community", "Partners"],
-  Legal: ["Privacy Policy", "Terms of Service", "Cookie Policy", "GDPR"],
+  제품: ["기능", "가격", "데모", "모바일 앱"],
+  회사: ["회사 소개", "채용", "블로그", "보도자료"],
+  리소스: ["고객센터", "문서", "커뮤니티", "파트너"],
+  법적고지: ["개인정보처리방침", "서비스 약관", "쿠키 정책", "GDPR"],
 }
 
 const socialLinks = [
@@ -32,7 +32,7 @@ export function Footer() {
               <span className="text-xl font-bold text-foreground">CampX</span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-xs">
-              AI-powered camping experience that makes outdoor adventures easier and more enjoyable for everyone.
+              모든 사람을 위한 야외 모험을 더 쉽고 즐겁게 만드는 AI 기반 캠핑 경험.
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -75,7 +75,7 @@ export function Footer() {
             © 2026 CampX. All rights reserved.
           </p>
           <p className="text-muted-foreground text-sm">
-            Made with care for outdoor lovers
+            야외를 사랑하는 사람들을 위해 정성스럽게 만들었습니다
           </p>
         </div>
       </div>

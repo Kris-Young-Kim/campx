@@ -98,7 +98,7 @@ export async function getUserProfile(): Promise<ActionResult<UserProfile | null>
       // #region agent log
       fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:92',message:'Checking column existence',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
       // #endregion
-      const columnCheck = await sql<{ exists: boolean }>`
+      const columnCheck = await sql`
         SELECT EXISTS (
           SELECT 1 FROM information_schema.columns 
           WHERE table_schema = 'public' 
@@ -106,7 +106,7 @@ export async function getUserProfile(): Promise<ActionResult<UserProfile | null>
           AND column_name = 'clerk_user_id'
         ) as exists
       `;
-      const columnExists = columnCheck[0]?.exists ?? false;
+      const columnExists = (columnCheck[0] as { exists: boolean } | undefined)?.exists ?? false;
       // #region agent log
       fetch('http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'actions.ts:101',message:'Column existence check result',data:{columnExists,columnCheckResult:columnCheck[0]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
       // #endregion
@@ -205,7 +205,7 @@ export async function updateUserProfile(
     // 컬럼 존재 여부 확인 (health_condition, has_pet, family_size)
     // 컬럼이 없으면 해당 필드를 업데이트하지 않음
     try {
-      const columnCheck = await sql<{ exists: boolean }>`
+      const columnCheck = await sql`
         SELECT EXISTS (
           SELECT 1 FROM information_schema.columns 
           WHERE table_schema = 'public' 
@@ -213,7 +213,7 @@ export async function updateUserProfile(
           AND column_name = 'health_condition'
         ) as exists
       `;
-      const hasHealthCondition = columnCheck[0]?.exists ?? false;
+      const hasHealthCondition = (columnCheck[0] as { exists: boolean } | undefined)?.exists ?? false;
 
       if (hasHealthCondition) {
         if (input.healthCondition !== undefined) {

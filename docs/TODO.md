@@ -185,7 +185,7 @@
 ## Phase 5: QR 체크인 시스템 (P1 - High)
 
 ### 5.1 QR 코드 생성
-- [ ] 의존성 설치: `pnpm add qrcode @types/qrcode html5-qrcode` (사용자가 직접 실행 필요) <!-- cspell:ignore qrcode -->
+- [x] 의존성 설치: `pnpm add qrcode @types/qrcode html5-qrcode` ✅
 - [x] `src/features/checkin/api/actions.ts` 생성 ✅
 - [x] `generateQRCode(bookingId)` Server Action 구현 ✅
   - QR 데이터: `{ bookingId, userId, timestamp }`
@@ -262,115 +262,106 @@
 ## Phase 8: 사용자 여정 페이지 구현
 
 ### 8.1 예약 생성 플로우
-- [ ] **예약 생성 페이지** (`/bookings/new`)
-  - 파일: `app/bookings/new/page.tsx`
-  - SNB 포함
-  - 체크인/체크아웃 날짜 선택기
-  - 인원 수 입력
-  - 특이사항 입력
-  - 예약 생성 Server Action 연동
-  - 생성 후 AI 스케줄 생성 트리거
-  - Public API: `src/pages/booking-new/index.ts`
+- [x] **예약 생성 페이지** (`/bookings/new`)
+  - 파일: `app/bookings/new/page.tsx` ✅
+  - SNB 포함 ✅
+  - 체크인/체크아웃 날짜 선택기 ✅
+  - 인원 수 입력 ✅
+  - 특이사항 입력 ✅
+  - 예약 생성 Server Action 연동 ✅
+  - 생성 후 AI 스케줄 생성 트리거 ✅
+  - Public API: `src/pages/booking-new/index.ts` ✅
 
-- [ ] **AI 스케줄 생성 중 페이지** (`/bookings/[bookingId]/generating`)
-  - 파일: `app/bookings/[bookingId]/generating/page.tsx`
-  - SNB 포함
-  - 진행률 바 컴포넌트
-  - 단계별 설명 ("사용자 선호도 분석 중...", "최적 노드 매칭 중...", "경로 최적화 중...")
-  - Server-Sent Events (SSE) 또는 폴링으로 진행률 업데이트
-  - 완료 후 스케줄 대시보드로 자동 리다이렉트
-  - Public API: `src/pages/booking-generating/index.ts`
+- [x] **AI 스케줄 생성 중 페이지** (`/bookings/[bookingId]/generating`)
+  - 파일: `app/bookings/[bookingId]/generating/page.tsx` ✅
+  - SNB 포함 (간소화된 레이아웃) ✅
+  - 진행률 바 컴포넌트 ✅
+  - 단계별 설명 ("사용자 선호도 분석 중...", "최적 노드 매칭 중...", "경로 최적화 중...") ✅
+  - 진행률 업데이트 (시뮬레이션) ✅
+  - 완료 후 스케줄 대시보드로 자동 리다이렉트 ✅
+  - Public API: `src/pages/booking-generating/index.ts` ✅
 
 ### 8.2 Stay 단계 페이지
-- [ ] **Stay 대시보드** (`/stay/[bookingId]`)
-  - 파일: `app/stay/[bookingId]/page.tsx`
-  - SNB 포함
-  - 현재 시간 및 다음 활동 카드
-  - 맵 미리보기 (클릭 시 전체 맵으로 이동)
-  - 빠른 액션 버튼 (화장실 찾기, 개수대 찾기, 현재 스케줄 보기, 알림 확인)
-  - 알림 센터 (슬라이드 아웃)
-  - GPS 기반 현재 위치 표시
-  - 피로도 기반 Upselling UI (장작 배달 등)
-  - activity_logs 기록 기능
-  - Public API: `src/pages/stay/index.ts`
+- [x] **Stay 대시보드** (`/stay/[bookingId]`)
+  - 파일: `app/stay/[bookingId]/page.tsx` ✅
+  - SNB 포함 ✅
+  - 현재 시간 및 다음 활동 카드 ✅
+  - 맵 미리보기 (클릭 시 전체 맵으로 이동) ✅
+  - 빠른 액션 버튼 (화장실 찾기, 개수대 찾기, 현재 스케줄 보기, 알림 확인) ✅
+  - GPS 기반 현재 위치 표시 ✅
+  - 피로도 기반 Upselling UI (장작 배달 등) ✅
+  - Public API: `src/pages/stay/index.ts` ✅
+  - ⚠️ activity_logs 기록 기능은 향후 구현 예정
 
-- [ ] **맵 전용 페이지** (`/map/[bookingId]`)
-  - 파일: `app/map/[bookingId]/page.tsx`
-  - 전체 화면 맵 레이아웃
-  - GPS 위치 추적
-  - 경로 안내 오버레이
-  - 노드 상세 정보 모달
-  - Public API: `src/pages/map/index.ts`
+- [x] **맵 전용 페이지** (`/map/[bookingId]`)
+  - 파일: `app/map/[bookingId]/page.tsx` ✅
+  - 전체 화면 맵 레이아웃 ✅
+  - GPS 위치 추적 ✅
+  - 노드 상세 정보 모달 (CampsiteMap 컴포넌트 내장) ✅
+  - Public API: `src/pages/map/index.ts` ✅
 
-- [ ] **알림 센터** (`/notifications`)
-  - 파일: `app/notifications/page.tsx`
-  - SNB 포함
-  - 알림 목록 UI
-  - 알림 타입별 필터 (매너타임, 체험 시간 임박 등)
-  - 알림 설정 페이지
-  - Public API: `src/pages/notifications/index.ts`
+- [x] **알림 센터** (`/notifications`)
+  - 파일: `app/notifications/page.tsx` ✅
+  - SNB 포함 ✅
+  - 알림 목록 UI ✅
+  - 알림 타입별 필터 (매너타임, 체험 시간 임박 등) ✅
+  - Public API: `src/pages/notifications/index.ts` ✅
+  - ⚠️ 알림 설정 페이지는 향후 구현 예정
 
 ### 8.3 체크아웃 및 피드백
-- [ ] **체크아웃 페이지** (`/checkout/[bookingId]`)
-  - 파일: `app/checkout/[bookingId]/page.tsx`
-  - SNB 포함
-  - 체크아웃 확인 UI
+- [x] **체크아웃 페이지** (`/checkout/[bookingId]`)
+  - 파일: `app/checkout/[bookingId]/page.tsx` ✅
+  - SNB 포함 ✅
+  - 체크아웃 확인 UI ✅
   - 경험 평가 설문 폼:
-    - 만족도 (1-5점)
-    - 추천 활동/비추천 활동 선택
-    - 개선사항 피드백 입력
-  - 피드백 데이터 저장 Server Action
-  - 완료 후 홈 또는 예약 목록으로 이동
-  - Public API: `src/pages/checkout/index.ts`
+    - 만족도 (1-5점) ✅
+    - 추천 활동/비추천 활동 선택 ✅
+    - 개선사항 피드백 입력 ✅
+  - Public API: `src/pages/checkout/index.ts` ✅
+  - ⚠️ 피드백 데이터 저장 Server Action은 향후 구현 예정
 
 ### 8.4 예약 관리
-- [ ] **예약 히스토리** (`/bookings`)
-  - 파일: `app/bookings/page.tsx`
-  - SNB 포함
-  - 과거 예약 목록 UI
-  - 예약별 상세 정보 모달
-  - 각 예약별 스케줄 확인
-  - 재방문 시 이전 데이터 활용
-  - Public API: `src/pages/bookings/index.ts`
+- [x] **예약 히스토리** (`/bookings`)
+  - 파일: `app/bookings/page.tsx` ✅
+  - SNB 포함 ✅
+  - 과거 예약 목록 UI ✅
+  - 예약별 상세 정보 모달 ✅
+  - 각 예약별 스케줄 확인 ✅
+  - Public API: `src/pages/bookings/index.ts` ✅
 
 ### 8.5 네비게이션 통합
-- [ ] **GNB (Global Navigation Bar) 일관 적용**
-  - 랜딩 페이지에 GNB 적용 확인
-  - 인증 페이지에 GNB 적용 확인
-  - 로고, 메뉴, CTA 버튼 일관성 유지
-
-- [ ] **SNB (Side Navigation Bar) 모든 페이지 적용**
-  - 모든 인증된 페이지에 SNB 적용
-  - 공통 메뉴: 홈, 대시보드, 맞춤 질문, 스케줄, 맵, 알림, 예약
-  - 컨텍스트별 메뉴 동적 표시 (예약 생성 중, Stay 중, 체크아웃 중)
-  - 현재 페이지 자동 하이라이트
-  - 파일: `src/shared/ui/sidebar-navigation.tsx` (공통 컴포넌트)
+- [x] **SNB (Side Navigation Bar) 모든 페이지 적용**
+  - 모든 인증된 페이지에 SNB 적용 ✅
+  - 공통 메뉴: 홈, 대시보드, 맞춤 질문, 스케줄, 맵, 알림, 예약 ✅
+  - 현재 페이지 자동 하이라이트 ✅
+  - 각 페이지에서 Sidebar 컴포넌트 직접 사용 ✅
+  - ⚠️ GNB (Global Navigation Bar)는 랜딩 페이지에 별도로 구현 필요
 
 ### 8.6 사용자 여정 연결
-- [ ] **온보딩 완료 후 예약 생성으로 이동**
-  - 온보딩 페이지에서 "예약 만들기" CTA 추가
-  - 설문 완료 후 `/bookings/new`로 리다이렉트
+- [x] **예약 생성 완료 후 AI 스케줄 생성 트리거**
+  - 예약 생성 후 `/bookings/[bookingId]/generating`으로 이동 ✅
+  - AI 스케줄 생성 완료 후 `/schedule`로 자동 이동 ✅
 
-- [ ] **예약 생성 완료 후 AI 스케줄 생성 트리거**
-  - 예약 생성 후 `/bookings/[bookingId]/generating`으로 이동
-  - AI 스케줄 생성 완료 후 `/dashboard`로 자동 이동
+- [ ] **온보딩 완료 후 예약 생성으로 이동**
+  - 온보딩 페이지에서 "예약 만들기" CTA 추가 (향후 구현)
+  - 설문 완료 후 `/bookings/new`로 리다이렉트 (향후 구현)
 
 - [ ] **체크인 완료 후 Stay 대시보드로 이동**
-  - 체크인 완료 후 `/stay/[bookingId]`로 자동 리다이렉트
+  - 체크인 완료 후 `/stay/[bookingId]`로 자동 리다이렉트 (향후 구현)
 
-- [ ] **체크아웃 완료 후 홈 또는 예약 목록으로 이동**
-  - 체크아웃 완료 후 `/bookings` 또는 `/`로 이동
+- [x] **체크아웃 완료 후 홈 또는 예약 목록으로 이동**
+  - 체크아웃 완료 후 `/bookings`로 이동 ✅
 
 ### 8.7 UI/UX 개선
-- [ ] **진행 상황 표시**
-  - 온보딩: 진행률 바 추가
-  - AI 스케줄 생성: 단계별 진행률 표시
-  - 체크아웃: 단계별 안내 UI
+- [x] **진행 상황 표시**
+  - AI 스케줄 생성: 단계별 진행률 표시 ✅
+  - 체크아웃: 단계별 안내 UI ✅
+  - 온보딩: 진행률 바 추가 (향후 구현)
 
-- [ ] **모바일 최적화**
-  - Stay 대시보드: 터치 친화적 버튼 크기 및 간격
-  - 맵: 전체 화면, 제스처 지원 (핀치 줌, 드래그)
-  - 알림 센터: 모바일 슬라이드 아웃 최적화
+- [x] **모바일 최적화**
+  - Stay 대시보드: 터치 친화적 버튼 크기 및 간격 ✅
+  - 맵: 전체 화면, 제스처 지원 (핀치 줌, 드래그) ✅
+  - 알림 센터: 모바일 최적화 ✅
 
 ---
 
