@@ -10,9 +10,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'CampX - AI 기반 캠핑 DX 솔루션',
-  description: 'AI 스케줄러, 3D 캠핑 맵, 스마트 체크인으로 더 편리한 캠핑을 경험하세요.',
-  generator: 'v0.app',
+  title: '자연스런 캠핑장',
+  description: '충청북도 제천의 청정 자연 속 자연스런 캠핑장. 큐어피쉬 체험, 임산물 체험, 바람골길 맑은 공기 체험 등 특별한 자연 체험 프로그램을 경험하세요.',
   icons: {
     icon: [
       {
@@ -22,10 +21,6 @@ export const metadata: Metadata = {
       {
         url: '/icon-dark-32x32.png',
         media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
       },
     ],
     apple: '/apple-icon.png',
@@ -45,7 +40,7 @@ export default function RootLayout({
           <meta name="theme-color" content="#000000" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-          <meta name="apple-mobile-web-app-title" content="CampX" />
+          <meta name="apple-mobile-web-app-title" content="자연스런 캠핑장" />
         </head>
         <body className={`font-sans antialiased`}>
           {children}

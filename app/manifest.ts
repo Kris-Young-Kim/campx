@@ -4,10 +4,10 @@ export default function manifest(): MetadataRoute.Manifest {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   return {
-    name: "CampX - AI 캠핑 가이드",
-    short_name: "CampX",
+    name: "자연스런 캠핑장",
+    short_name: "자연스런 캠핑장",
     description:
-      "AI 기반 맞춤형 캠핑 일정 추천 및 체크인 서비스",
+      "충청북도 제천의 청정 자연 속 체험 캠핑장. 큐어피쉬, 임산물, 바람골길 맑은 공기 체험.",
     start_url: "/",
     display: "standalone",
     orientation: "portrait-primary",
@@ -43,14 +43,14 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "1280x720",
         type: "image/png",
         form_factor: "wide",
-        label: "CampX 대시보드",
+        label: "자연스런 캠핑장 대시보드",
       },
       {
         src: "/screenshot-narrow.png",
         sizes: "750x1334",
         type: "image/png",
         form_factor: "narrow",
-        label: "CampX 모바일 뷰",
+        label: "자연스런 캠핑장 모바일 뷰",
       },
     ],
   };
