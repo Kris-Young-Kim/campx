@@ -1,5 +1,10 @@
 import { MapPage } from '@/pages/map';
 
-export default function Page() {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ bookingId: string }>;
+}) {
+  await params;
   return <MapPage />;
 }

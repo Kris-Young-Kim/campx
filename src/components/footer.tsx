@@ -9,7 +9,7 @@ const footerLinks = {
   "회사 소개": [
     { label: "회사 소개", href: "/about" },
     { label: "블로그", href: "#" },
-    { label: "보도자료", href: "/company-intro.pdf", target: "_blank" },
+    { label: "보도자료", href: "/press" },
   ],
   "리소스": [
     { label: "고객센터: 010-6463-9641", href: "tel:01064639641" },
