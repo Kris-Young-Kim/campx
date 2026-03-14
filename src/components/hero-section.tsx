@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { motion } from "framer-motion"
 import { Sparkles, Activity, Flame, Box } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -20,7 +21,7 @@ const floatingCards = [
   {
     icon: Box,
     label: "다음 일정",
-    value: "3D 투어",
+    value: "큐어피쉬 체험",
     position: "bottom-20 left-0 md:left-20",
   },
 ]
@@ -29,8 +30,8 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-background" />
-      
+      <div className="absolute inset-0 bg-linear-to-b from-primary/5 via-transparent to-background" />
+
       {/* Decorative circles */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
@@ -70,7 +71,7 @@ export function HeroSection() {
             className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty"
           >
             스마트 체크인부터 바이오 리듬 기반 일정까지.
-            CampX가 번거로움을 대신 해결하고, 당신은 추억 만들기에 집중하세요.
+            자연스런 캠핑장이 번거로움을 대신 해결하고, 당신은 추억 만들기에 집중하세요.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -83,16 +84,22 @@ export function HeroSection() {
             <Button
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg shadow-accent/30"
+              asChild
             >
-              <Sparkles className="w-5 h-5 mr-2" />
-              모험 시작하기
+              <Link href="/experiences">
+                <Sparkles className="w-5 h-5 mr-2" />
+                모험 시작하기
+              </Link>
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="rounded-full px-8 py-6 text-lg font-semibold border-2 bg-transparent"
+              asChild
             >
-              데모 보기
+              <Link href="/about">
+                회사 소개
+              </Link>
             </Button>
           </motion.div>
         </div>

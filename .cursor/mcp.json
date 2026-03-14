@@ -1,27 +1,30 @@
 {
   "mcpServers": {
     "sequential-thinking": {
-      "command": "bunx",
+      "command": "npx",
       "args": [
+        "-y",
         "@modelcontextprotocol/server-sequential-thinking"
       ]
     },
     "context7": {
-      "command": "bunx",
+      "command": "npx",
       "args": [
+        "-y",
         "@upstash/context7-mcp"
       ]
     },
     "chrome-devtools": {
-      "command": "bunx",
+      "command": "npx",
       "args": [
+        "-y",
         "chrome-devtools-mcp@latest"
       ]
     },
     "shadcn": {
-      "command": "bunx",
+      "command": "npx",
       "args": [
-        "bunx",
+        "-y",
         "shadcn@latest",
         "mcp"
       ]

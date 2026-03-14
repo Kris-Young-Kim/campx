@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { motion } from "framer-motion"
 import { Sparkles, Activity, Flame, Box } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -29,7 +30,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-background" />
+      <div className="absolute inset-0 bg-linear-to-b from-primary/5 via-transparent to-background" />
       
       {/* Decorative circles */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
@@ -83,9 +84,12 @@ export function HeroSection() {
             <Button
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg shadow-accent/30"
+              asChild
             >
-              <Sparkles className="w-5 h-5 mr-2" />
-              모험 시작하기
+              <Link href="/experiences">
+                <Sparkles className="w-5 h-5 mr-2" />
+                모험 시작하기
+              </Link>
             </Button>
             <Button
               size="lg"

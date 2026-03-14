@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Tent, Menu, X } from "lucide-react"
+import Image from "next/image"
+import { motion } from "framer-motion"
+import { Menu } from "lucide-react"
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 const navItems = [
   { label: "주요 기능", href: "#features" },
-  { label: "요금제", href: "#pricing" },
+  { label: "체험 프로그램", href: "/experiences" },
   { label: "파트너", href: "#partners" },
 ]
 
@@ -40,10 +41,14 @@ export function GNB() {
       <nav className="container mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-            <Tent className="w-6 h-6 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold text-foreground">CampX</span>
+          <Image
+            src="/logo-natural-camping.jpg"
+            alt="자연스런 캠핑장 로고"
+            width={40}
+            height={40}
+            className="rounded-xl"
+          />
+          <span className="text-xl font-bold text-foreground">자연스런 캠핑장</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -86,12 +91,17 @@ export function GNB() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] bg-background">
+            <SheetTitle className="sr-only">모바일 메뉴</SheetTitle>
             <div className="flex flex-col gap-8 mt-8">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                  <Tent className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold text-foreground">CampX</span>
+                <Image
+                  src="/logo-natural-camping.jpg"
+                  alt="자연스런 캠핑장 로고"
+                  width={40}
+                  height={40}
+                  className="rounded-xl"
+                />
+                <span className="text-xl font-bold text-foreground">자연스런 캠핑장</span>
               </div>
               <nav className="flex flex-col gap-4">
                 {navItems.map((item) => (

@@ -25,6 +25,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, Map as MapIcon, Loader2, Home, LayoutDashboard, User } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Button } from '@/shared/ui/button';
 import {
   Sidebar,
   SidebarContent,
@@ -131,9 +132,21 @@ export function ScheduleDashboardPage() {
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <Calendar className="h-12 w-12 text-muted-foreground/50 mb-4" />
           <h3 className="text-lg font-semibold mb-2">활성 스케줄이 없습니다</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground mb-6">
             예약을 생성하고 AI 스케줄을 생성해보세요.
           </p>
+          <div className="flex gap-3">
+            <Button asChild>
+              <Link href="/bookings/new">
+                새 예약 만들기
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/dashboard">
+                대시보드로 이동
+              </Link>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -209,7 +222,7 @@ export function ScheduleDashboardPage() {
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-4">
             <SidebarTrigger />
-            <h2 className="text-lg font-semibold">CampX</h2>
+            <h2 className="text-lg font-semibold">자연스런 캠핑장</h2>
           </div>
         </SidebarHeader>
         <SidebarContent>

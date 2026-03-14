@@ -1,10 +1,14 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { Sparkles, ArrowRight } from "lucide-react"
+import Link from "next/link"
+import { Sparkles, ArrowRight, Phone, MapPin, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function CTASection() {
+  const [showContact, setShowContact] = useState(false)
+
   return (
     <section id="pricing" className="py-24 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
@@ -15,7 +19,6 @@ export function CTASection() {
           transition={{ duration: 0.6 }}
           className="relative overflow-hidden bg-secondary rounded-[2.5rem] px-6 py-16 md:px-16 md:py-24"
         >
-          {/* Background decorations */}
           <div className="absolute top-0 left-0 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
 
@@ -36,9 +39,9 @@ export function CTASection() {
               transition={{ delay: 0.3 }}
               className="text-3xl md:text-5xl lg:text-6xl font-bold text-secondary-foreground mb-6 text-balance"
             >
-              최고의 캠핑 여행을
+              특별한 자연 속
               <br />
-              준비하셨나요?
+              최고의 캠핑을 경험하세요
             </motion.h2>
 
             <motion.p
@@ -48,7 +51,7 @@ export function CTASection() {
               transition={{ delay: 0.4 }}
               className="text-secondary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto mb-10"
             >
-              CampX로 야외 경험을 변화시킨 수천 명의 행복한 캠퍼들과 함께하세요.
+              충청북도 제천의 청정 자연 속에서 잊을 수 없는 캠핑 체험을 시작하세요.
             </motion.p>
 
             <motion.div
@@ -61,14 +64,18 @@ export function CTASection() {
               <Button
                 size="lg"
                 className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 py-6 text-lg font-semibold shadow-lg"
+                asChild
               >
-                무료 체험 시작하기
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <Link href="/experiences">
+                  모험 시작하기
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="bg-transparent border-2 border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 rounded-full px-8 py-6 text-lg font-semibold"
+                onClick={() => setShowContact(true)}
               >
                 영업팀 문의
               </Button>
@@ -76,6 +83,66 @@ export function CTASection() {
           </div>
         </motion.div>
       </div>
+
+      {/* Contact Dialog Overlay */}
+      {showContact && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setShowContact(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2 }}
+            className="relative bg-card rounded-3xl p-8 shadow-2xl max-w-sm w-full mx-4 border border-border"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowContact(false)}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <Phone className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground">영업팀 문의</h3>
+              <p className="text-sm text-muted-foreground mt-1">자연스런 캠핑장</p>
+            </div>
+
+            <div className="space-y-4">
+              <a
+                href="tel:01064639641"
+                className="flex items-center gap-3 p-4 rounded-2xl bg-primary/5 hover:bg-primary/10 transition-colors group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">전화번호</p>
+                  <p className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    010-6463-9641
+                  </p>
+                </div>
+              </a>
+
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-secondary/10">
+                <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <MapPin className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">주소</p>
+                  <p className="font-medium text-foreground text-sm leading-relaxed">
+                    충청북도 제천시 백운면<br />구학산로 1096-1
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </section>
   )
 }

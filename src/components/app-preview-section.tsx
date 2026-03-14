@@ -13,7 +13,7 @@ const sidebarItems = [
 const scheduleItems = [
   { time: "08:00", activity: "모닝 요가", icon: Sun, status: "completed" },
   { time: "10:00", activity: "아침 식사", icon: Utensils, status: "completed" },
-  { time: "12:00", activity: "호수 탐험", icon: Map, status: "current" },
+  { time: "12:00", activity: "큐어피쉬 체험", icon: Map, status: "current" },
   { time: "18:00", activity: "캠프파이어", icon: Flame, status: "upcoming" },
 ]
 
@@ -33,7 +33,7 @@ export function AppPreviewSection() {
             대시보드 미리보기
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4 text-balance">
-            <span className="text-primary">CampX 대시보드</span>를 경험하세요
+            <span className="text-primary">자연스런 캠핑장</span> 앱을 경험하세요
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             직관적인 인터페이스로 캠핑 경험을 얼마나 쉽게 관리할 수 있는지 확인해보세요.

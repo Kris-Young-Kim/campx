@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { ScheduleDashboardPage } from "@/pages/schedule-dashboard";
+import { DashboardPage } from "@/pages/dashboard";
 import { getSession } from "@/shared/lib/auth-server";
 
 export const metadata: Metadata = {
   title: "대시보드",
-  description: "AI가 생성한 맞춤형 스케줄을 확인하세요",
+  description: "예약 현황과 빠른 액션을 한눈에 확인하세요",
 };
 
 export default async function Page() {
@@ -15,5 +15,5 @@ export default async function Page() {
     redirect("/auth/sign-in");
   }
 
-  return <ScheduleDashboardPage />;
+  return <DashboardPage />;
 }

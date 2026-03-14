@@ -13,7 +13,7 @@ const sidebarItems = [
 const scheduleItems = [
   { time: "08:00", activity: "모닝 요가", icon: Sun, status: "completed" },
   { time: "10:00", activity: "아침 식사", icon: Utensils, status: "completed" },
-  { time: "12:00", activity: "호수 탐험", icon: Map, status: "current" },
+  { time: "12:00", activity: "큐어피쉬 체험", icon: Map, status: "current" },
   { time: "18:00", activity: "캠프파이어", icon: Flame, status: "upcoming" },
 ]
 
