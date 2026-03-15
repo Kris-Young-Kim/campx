@@ -183,8 +183,9 @@ export function HeroSection() {
             transition={{ duration: 0.7, delay: 1.0 }}
             className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto"
           >
-            스마트 체크인부터 바이오 리듬 기반 일정까지.
-            자연스런 캠핑장이 번거로움을 대신 해결하고, 당신은 추억 만들기에 집중하세요.
+            "아무도 없던 숲속에서는 모든 것이 혁신입니다. 이 혁신이 자연과 인간에게 이로울 수 있기를 희망합니다."
+            <br />
+            원시 자연의 극과 최첨단 기술의 극, 두 극과 극의 만남. 산림 DX 모델, 에코푸드테크 플랫폼, 자연스런 캠핑장
           </motion.p>
 
           {/* CTA */}
