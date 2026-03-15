@@ -109,21 +109,28 @@ export function PressPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="max-w-3xl mx-auto mt-12 p-6 rounded-2xl bg-secondary/20 border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+          className="max-w-3xl mx-auto mt-12"
         >
-          <div>
-            <p className="font-semibold text-foreground mb-1">회사소개서</p>
-            <p className="text-sm text-muted-foreground">자연스런 캠핑장 공식 회사소개서 PDF</p>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-foreground">회사 소개서</h2>
+            <a
+              href="/company-intro.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+            >
+              <ExternalLink className="w-4 h-4" />
+              새 탭에서 열기
+            </a>
           </div>
-          <a
-            href="/company-intro.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors shrink-0"
-          >
-            <ExternalLink className="w-4 h-4" />
-            PDF 다운로드
-          </a>
+          <div className="rounded-3xl overflow-hidden border border-border shadow-lg bg-card">
+            <iframe
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent("https://naturalcamp.vercel.app/company-intro.pdf")}&embedded=true`}
+              className="w-full"
+              style={{ height: "80vh", minHeight: 600 }}
+              title="자연스런 캠핑장 회사 소개서"
+            />
+          </div>
         </motion.div>
       </div>
     </main>
