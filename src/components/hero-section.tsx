@@ -185,11 +185,18 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.0 }}
-            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto"
+            className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
           >
-            "아무도 없던 숲속에서는 모든 것이 혁신입니다. 이 혁신이 자연과 인간에게 이로울 수 있기를 희망합니다."
+            "아무도 없던 숲속에서는 모든 것이 혁신입니다.
             <br />
-            원시 자연의 극과 최첨단 기술의 극, 두 극과 극의 만남. 산림 DX 모델, 에코푸드테크 플랫폼, 자연스런 캠핑장
+            이 혁신이 자연과 인간에게 이로울 수 있기를 희망합니다."
+            <br className="my-1" />
+            <br />
+            원시 자연의 극과 최첨단 기술의 극,
+            <br />
+            두 극과 극의 만남.
+            <br />
+            산림 DX 모델 · 에코푸드테크 플랫폼 · 자연스런 캠핑장
           </motion.p>
 
           {/* CTA */}
