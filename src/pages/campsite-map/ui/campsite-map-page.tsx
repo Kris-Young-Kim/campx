@@ -171,7 +171,7 @@ export function CampsiteMapPage() {
           <div className="flex gap-2 shrink-0">
             <a
               href={`tel:${CAMPSITE.phone.replace(/-/g, "")}`}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm font-medium hover:bg-secondary/80 transition-colors"
             >
               <Phone className="w-3.5 h-3.5" />
               전화
