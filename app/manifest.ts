@@ -37,21 +37,5 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: "maskable",
       },
     ],
-    screenshots: [
-      {
-        src: "/screenshot-wide.png",
-        sizes: "1280x720",
-        type: "image/png",
-        form_factor: "wide",
-        label: "자연스런 캠핑장 대시보드",
-      },
-      {
-        src: "/screenshot-narrow.png",
-        sizes: "750x1334",
-        type: "image/png",
-        form_factor: "narrow",
-        label: "자연스런 캠핑장 모바일 뷰",
-      },
-    ],
   };
 }
