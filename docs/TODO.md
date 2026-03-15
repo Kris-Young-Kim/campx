@@ -365,6 +365,94 @@
 
 ---
 
+## Phase 9: 브랜딩 · 랜딩 페이지 · 지도 개편 (2026-03-15)
+
+### 9.1 브랜딩 전체 적용 — "CampX" → "자연스런 캠핑장"
+- [x] **로고 교체** (`/logo-natural-camping.jpg`) — GNB, Footer, About 페이지 ✅
+- [x] **브랜드명 텍스트 일괄 변경** ✅
+  - `src/components/gnb.tsx`: "CampX" → "자연스런 캠핑장"
+  - `src/components/hero-section.tsx`
+  - `src/components/features-section.tsx`: "왜 CampX인가요?" / 설명 문구
+  - `src/components/app-preview-section.tsx`
+  - `src/components/cta-section.tsx`
+  - `src/components/footer.tsx`
+
+### 9.2 SEO · PWA · 파비콘 업데이트
+- [x] **메타데이터** (`app/layout.tsx`) ✅
+  - `title`: '자연스런 캠핑장'
+  - `description`: 제천 자연 체험 캠핑장 내용으로 변경
+  - `apple-mobile-web-app-title`: '자연스런 캠핑장'
+- [x] **파비콘 재생성** (sharp로 로고 JPG → 모든 사이즈 변환) ✅
+  - `favicon.ico`, `icon-light/dark-32x32.png`, `icon-192.png`, `icon-512.png`, `apple-icon.png`
+- [x] **PWA manifest** (`app/manifest.ts`) ✅
+  - `name`, `short_name`: '자연스런 캠핑장'
+  - `description`: 캠핑장 소개 내용
+
+### 9.3 체험 프로그램 페이지 실제 이미지 적용 (`/experiences`)
+- [x] docs 폴더 사진 7장 → `public/` 복사 ✅
+  - `exp-cure-fish.jpg` (큐어피쉬 체험)
+  - `exp-forest-product.jpg` (임산물 체험 — 밤 줍기)
+  - `exp-event.jpg` (이벤트 프로그램 — 물놀이)
+  - `exp-pine-echo.jpg` (소나무동산 메아리 — Go-Forest!)
+  - `exp-wind-valley.jpg` (바람골길 맑은 공기)
+- [x] `src/pages/experiences/ui/experiences-page.tsx` 실제 사진 카드로 교체 ✅
+  - `next/image` + `fill` 사용, hover 시 이미지 줌 효과
+
+### 9.4 기능 카드 인터랙션 구현 (`features-section.tsx`)
+- [x] **로그인 상태** → 카드 클릭 시 기능 페이지로 이동 ✅
+  - AI 스케줄러 → `/schedule`
+  - 3D 맵 뷰어 → `/dashboard`
+  - 스마트 체크인 → `/bookings`
+- [x] **비로그인 상태** → 클릭 시 Clerk 로그인 모달 팝업 ✅
+  - "로그인 후 이용 가능" 안내 표시
+- [x] `useUser()` 훅으로 클라이언트 auth 상태 감지 ✅
+
+### 9.5 보도자료 페이지 신설 (`/press`)
+- [x] `src/pages/press/ui/press-page.tsx` 생성 ✅
+  - 보도자료 카드 목록 UI
+  - 굿모닝충청 기사 추가: "[청년이 답이다] 캠핑의 최고 가치는 자연…제천 '모두의 숲' 주목"
+    - URL: https://www.goodmorningcc.com/news/articleView.html?idxno=429213
+  - 회사소개서 PDF 다운로드 버튼
+- [x] `app/press/page.tsx` 라우트 생성 ✅
+- [x] **푸터 링크 변경**: "보도자료" `/company-intro.pdf` → `/press` ✅
+
+### 9.6 네이버 지도 페이지 신설 (`/map`)
+- [x] `src/pages/campsite-map/ui/campsite-map-page.tsx` 생성 ✅
+  - 네이버 지도 JavaScript API v3 연동
+  - 캠핑장 위치 마커 + 인포창 (충청북도 제천시 백운면 구학산로 1096-1)
+  - 지도 타입 전환 버튼 (일반 / 지형 / 위성)
+  - 하단 정보 바: 주소, 전화, 전화 버튼, 길찾기 버튼
+  - 길찾기: 네이버 앱 딥링크 → 미설치 시 웹 fallback
+  - API 키 미설정 시 안내 메시지 표시
+- [x] `app/map/page.tsx` 독립 라우트 생성 (`/map/[bookingId]`와 별도) ✅
+- [x] **환경변수 추가** ✅
+  - `.env.example`: `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID`
+  - `.env.local`: API 키 실제 값 설정 완료
+  - 네이버 클라우드 콘솔에서 `localhost` 도메인 등록 필요
+
+### 9.7 Next.js 16 params Promise 오류 수정
+- [x] `app/map/[bookingId]/page.tsx`: `async` + `await params` 패턴 적용 ✅
+- [x] `app/stay/[bookingId]/page.tsx`: 동일 패턴 적용 ✅
+- [x] `app/bookings/[bookingId]/generating/page.tsx`: 동일 패턴 적용 ✅
+  - 기준: `app/checkin/[bookingId]/page.tsx`의 `params: Promise<{ bookingId: string }>` 패턴
+
+### 9.8 히어로섹션 전면 개편 — 파노라마 이미지 + 다이나믹 애니메이션
+- [x] 실제 캠핑장 사진 7장 `public/` 복사 (`hero-01.jpg` ~ `hero-07.jpg`) ✅
+- [x] **파노라마 무한 스크롤 스트립** (2열 반대 방향) ✅
+  - Row 1: 오른쪽→왼쪽 (소나무동산·큐어피쉬·물놀이·장작패기)
+  - Row 2: 왼쪽→오른쪽 역방향 (풀장·큐어피쉬근접·다슬기·소나무동산)
+  - 마우스 진입 → 전체 일시정지 (`useAnimation` 제어)
+  - 개별 이미지 호버 → `scale: 1.08` 확대 + 레이블 오버레이
+  - 양쪽 끝 fade 마스크로 자연스러운 파노라마 연출
+- [x] **헤드라인 단어별 blur+fade 순차 등장** (expo easing) ✅
+- [x] **배경 blob pulse 애니메이션** (3개, 비동기 타이밍) ✅
+- [x] **스크롤 패럴랙스** (`useScroll` + `useTransform`) ✅
+- [x] **통계 카드** spring 진입 + hover float ✅
+  - 큐어피쉬 체험 운영 중 / 자연 체험 5가지 / 캠프파이어 매일 저녁
+- [x] 버튼 `whileHover` / `whileTap` 스프링 반응 ✅
+
+---
+
 ## 성능 목표
 
 - [ ] AI 스케줄 생성: 3초 이내

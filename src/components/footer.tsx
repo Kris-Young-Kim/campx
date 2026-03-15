@@ -8,7 +8,6 @@ import { Youtube, Instagram } from "lucide-react"
 const footerLinks = {
   "회사 소개": [
     { label: "회사 소개", href: "/about" },
-    { label: "블로그", href: "#" },
     { label: "보도자료", href: "/press" },
   ],
   "리소스": [

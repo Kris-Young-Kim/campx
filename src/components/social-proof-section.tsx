@@ -13,7 +13,7 @@ const partners = [
 
 const testimonials = [
   {
-    content: "CampX 덕분에 가족 캠핑이 완전히 달라졌어요. AI 스케줄러가 정말 대단해요!",
+    content: "자연스런 캠핑장 덕분에 가족 캠핑이 완전히 달라졌어요. AI 스케줄러가 정말 대단해요!",
     author: "김지수",
     role: "4인 가족",
     rating: 5,
