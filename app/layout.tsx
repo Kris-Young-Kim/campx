@@ -12,6 +12,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: '자연스런 캠핑장',
   description: '충청북도 제천의 청정 자연 속 자연스런 캠핑장. 큐어피쉬 체험, 임산물 체험, 바람골길 맑은 공기 체험 등 특별한 자연 체험 프로그램을 경험하세요.',
+  manifest: '/manifest.webmanifest',
   icons: {
     icon: [
       {
@@ -36,8 +37,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="ko">
         <head>
-          <link rel="manifest" href="/manifest.json" />
           <meta name="theme-color" content="#000000" />
+          <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
           <meta name="apple-mobile-web-app-title" content="자연스런 캠핑장" />
