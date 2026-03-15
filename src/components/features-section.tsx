@@ -19,7 +19,7 @@ const features = [
     title: "3D 맵 뷰어",
     description: "출발 전 캠핑 사이트를 실감나는 3D로 미리 확인하세요. 텐트를 칠 최적의 장소를 찾아보세요.",
     color: "bg-secondary",
-    href: "/dashboard",
+    href: "/map/3d",
     cta: "맵 열기",
   },
   {

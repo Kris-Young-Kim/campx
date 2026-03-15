@@ -60,6 +60,11 @@ self.addEventListener('fetch', (event) => {
     return; // Service Worker가 가로채지 않음
   }
   
+  // Cache API는 http/https 스킴만 지원. chrome-extension 등은 캐시하면 오류 발생
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return; // Service Worker가 가로채지 않음 (캐시 불가 스킴)
+  }
+  
   // non-GET 요청은 Service Worker가 처리하지 않음
   if (event.request.method !== 'GET') {
     return; // 네트워크 요청만 처리, 캐시하지 않음
@@ -68,8 +73,8 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // 응답이 유효하면 캐시에 저장 (GET 요청만)
-        if (response && response.status === 200) {
+        // 응답이 유효하고 http(s) 요청일 때만 캐시 (GET 요청만)
+        if (response && response.status === 200 && (url.protocol === 'http:' || url.protocol === 'https:')) {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseToCache);

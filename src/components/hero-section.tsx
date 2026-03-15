@@ -143,7 +143,7 @@ export function HeroSection() {
             >
               <Sparkles className="w-4 h-4" />
             </motion.div>
-            <span className="text-sm font-medium">충청북도 제천 · 자연 체험 캠핑장</span>
+            <span className="text-sm font-medium">[아무도 없던 숲 속에서] 산림, 에코-푸드테크 플랫폼</span>
           </motion.div>
 
           {/* Headline — word blur reveal */}
