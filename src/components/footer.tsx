@@ -11,7 +11,7 @@ const footerLinks = {
     { label: "보도자료", href: "/press" },
   ],
   "리소스": [
-    { label: "고객센터: 010-6463-9641", href: "tel:01064639641" },
+    { label: "고객센터", href: "tel:01064639641" },
     { label: "커뮤니티", href: "https://www.youtube.com/@자연스런캠핑장", target: "_blank" },
   ],
 }
