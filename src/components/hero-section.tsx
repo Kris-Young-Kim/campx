@@ -6,6 +6,7 @@ import Image from "next/image"
 import { motion, useAnimation, useScroll, useTransform } from "framer-motion"
 import { Sparkles, Fish, Trees, Flame } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FireflyParticles } from "@/components/firefly-particles"
 
 const row1 = [
   { src: "/hero-01.jpg", label: "소나무동산 메아리" },
@@ -107,6 +108,9 @@ export function HeroSection() {
       ref={sectionRef}
       className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20"
     >
+      {/* Firefly particles */}
+      <FireflyParticles />
+
       {/* Animated background blobs */}
       <motion.div style={{ y: bgY }} className="absolute inset-0 pointer-events-none">
         <motion.div
