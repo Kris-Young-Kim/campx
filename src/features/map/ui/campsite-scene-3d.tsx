@@ -190,7 +190,7 @@ function MinecraftRobot({ x, z }: { x: number; z: number }) {
         outlineWidth={0.06}
         outlineColor="#000000"
       >
-        내 자리
+        현 위치
       </Text>
     </group>
   )
