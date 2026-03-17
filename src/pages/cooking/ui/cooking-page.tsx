@@ -1,14 +1,3 @@
-/**
- * @file onboarding-page.tsx
- * @description 온보딩 페이지 컴포넌트
- *
- * 사용자가 처음 접속할 때 선호도를 조사하는 페이지입니다.
- *
- * @dependencies
- * - @/features/onboarding: 설문 폼 컴포넌트
- * - @/shared/ui: Sidebar 컴포넌트
- */
-
 'use client';
 
 import Link from 'next/link';
@@ -23,7 +12,7 @@ import {
   User,
   UtensilsCrossed,
 } from 'lucide-react';
-import { SurveyForm } from '@/features/onboarding';
+import { CookingStatusCard } from '@/features/cooking';
 import {
   Sidebar,
   SidebarContent,
@@ -40,44 +29,16 @@ import {
 } from '@/shared/ui/sidebar';
 
 const navigationItems = [
-  {
-    title: '홈',
-    url: '/',
-    icon: Home,
-  },
-  {
-    title: '대시보드',
-    url: '/dashboard',
-    icon: LayoutDashboard,
-  },
-  {
-    title: '맞춤 질문',
-    url: '/onboarding',
-    icon: User,
-  },
-  {
-    title: '스케줄',
-    url: '/schedule',
-    icon: Calendar,
-  },
-  {
-    title: '예약',
-    url: '/bookings',
-    icon: BookOpen,
-  },
-  {
-    title: '캠핑장지도',
-    url: '/map',
-    icon: MapIcon,
-  },
-  {
-    title: '알림',
-    url: '/notifications',
-    icon: Bell,
-  },
+  { title: '홈', url: '/', icon: Home },
+  { title: '대시보드', url: '/dashboard', icon: LayoutDashboard },
+  { title: '맞춤 질문', url: '/onboarding', icon: User },
+  { title: '스케줄', url: '/schedule', icon: Calendar },
+  { title: '예약', url: '/bookings', icon: BookOpen },
+  { title: '캠핑장지도', url: '/map', icon: MapIcon },
+  { title: '알림', url: '/notifications', icon: Bell },
 ];
 
-export function OnboardingPage() {
+export function CookingPage() {
   const pathname = usePathname();
 
   return (
@@ -86,7 +47,7 @@ export function OnboardingPage() {
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-4">
             <SidebarTrigger />
-            <h2 className="text-lg font-semibold">CampX</h2>
+            <h2 className="text-lg font-semibold">자연스런 캠핑장</h2>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -99,11 +60,7 @@ export function OnboardingPage() {
                   const isActive = pathname === item.url;
                   return (
                     <SidebarMenuItem key={item.url}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={isActive}
-                        tooltip={item.title}
-                      >
+                      <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
                         <Link href={item.url}>
                           <Icon />
                           <span>{item.title}</span>
@@ -134,17 +91,14 @@ export function OnboardingPage() {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        <div className="container mx-auto max-w-2xl py-8 px-4">
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold mb-2">맞춤 질문</h1>
-            <p className="text-muted-foreground">
-              맞춤형 스케줄을 위해 몇 가지 질문에 답변해주세요.
+        <div className="container mx-auto max-w-4xl space-y-6 p-4 md:p-6">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold">미식조리현황</h1>
+            <p className="mt-2 text-sm md:text-base text-muted-foreground">
+              실시간 조리 현황을 확인하세요
             </p>
           </div>
-
-          <div className="rounded-lg border bg-card p-6">
-            <SurveyForm />
-          </div>
+          <CookingStatusCard show={true} />
         </div>
       </SidebarInset>
     </SidebarProvider>

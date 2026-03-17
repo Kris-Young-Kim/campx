@@ -25,7 +25,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { CalendarIcon, Loader2, Home, LayoutDashboard, User, Calendar, Map as MapIcon, Bell, BookOpen } from 'lucide-react';
+import { CalendarIcon, Loader2, Home, LayoutDashboard, User, Calendar, Map as MapIcon, Bell, BookOpen, UtensilsCrossed } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -96,7 +96,7 @@ const navigationItems = [
     icon: BookOpen,
   },
   {
-    title: '맵',
+    title: '캠핑장지도',
     url: '/map',
     icon: MapIcon,
   },
@@ -163,7 +163,7 @@ export function BookingNewPage() {
             <SidebarGroupLabel>메뉴</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {navigationItems.map((item) => {
+                {navigationItems.slice(0, -1).map((item) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.url;
                   return (
@@ -181,6 +181,22 @@ export function BookingNewPage() {
                     </SidebarMenuItem>
                   );
                 })}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/cooking'} tooltip="미식조리현황">
+                    <Link href="/cooking">
+                      <UtensilsCrossed />
+                      <span>미식조리현황</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/notifications'} tooltip="알림">
+                    <Link href="/notifications">
+                      <Bell />
+                      <span>알림</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

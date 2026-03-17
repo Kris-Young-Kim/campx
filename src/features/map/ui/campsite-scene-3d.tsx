@@ -1,9 +1,39 @@
 "use client"
 
-import { useRef, useState, useMemo } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { OrbitControls, Text, Html, Sky, Environment } from "@react-three/drei"
+import { OrbitControls, Text, Html, Sky } from "@react-three/drei"
 import * as THREE from "three"
+
+// 예약한 사이트 ID (추후 실제 예약 데이터로 교체)
+const MY_BOOKED_SITE_ID = "C3"
+
+function debugLog(payload: {
+  location: string
+  message: string
+  data?: Record<string, unknown>
+  hypothesisId: "A" | "B" | "C" | "D"
+  runId: "baseline" | "post-fix"
+}) {
+  // #region agent log
+  fetch("http://127.0.0.1:7242/ingest/c7abc132-a08b-470e-b9be-70c6a8a0ef9e", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "669ff5",
+    },
+    body: JSON.stringify({
+      sessionId: "669ff5",
+      timestamp: Date.now(),
+      location: payload.location,
+      message: payload.message,
+      data: payload.data ?? {},
+      hypothesisId: payload.hypothesisId,
+      runId: payload.runId,
+    }),
+  }).catch(() => {})
+  // #endregion
+}
 
 /* ─── Types ──────────────────────────────────────────────── */
 interface Site {
@@ -69,6 +99,107 @@ const FACILITY_COLOR: Record<Facility["type"], string> = {
   entrance: "#94a3b8",
 }
 
+/* ─── Booking Arrow ──────────────────────────────────────── */
+function BookingArrow({ x, z }: { x: number; z: number }) {
+  const groupRef = useRef<THREE.Group>(null)
+  const t = useRef(0)
+  const didLog = useRef(false)
+  const didProjectLog = useRef(false)
+  const { camera, size } = useThree()
+  const BASE_Y = 1.8
+  const BOB_AMPLITUDE = 0.22
+
+  useEffect(() => {
+    if (didLog.current) return
+    didLog.current = true
+    debugLog({
+      location: "src/features/map/ui/campsite-scene-3d.tsx:BookingArrow",
+      message: "BookingArrow mounted (world anchor)",
+      data: { siteId: MY_BOOKED_SITE_ID, x, z, yBase: BASE_Y, bob: BOB_AMPLITUDE },
+      hypothesisId: "A",
+      runId: "baseline",
+    })
+  }, [x, z])
+
+  useFrame((_, delta) => {
+    t.current += delta * 2
+    if (groupRef.current) {
+      groupRef.current.position.y = BASE_Y + Math.sin(t.current) * BOB_AMPLITUDE
+    }
+
+    if (!didProjectLog.current) {
+      didProjectLog.current = true
+
+      // C3 사이트 메시 중심(y=0.15)과 화살표 앵커(y=3.2)의 화면상(픽셀) 차이를 측정
+      const siteWorld = new THREE.Vector3(x, 0.15, z)
+      const arrowWorld = new THREE.Vector3(x, BASE_Y, z)
+      const siteNdc = siteWorld.clone().project(camera)
+      const arrowNdc = arrowWorld.clone().project(camera)
+
+      const toPx = (ndc: THREE.Vector3) => ({
+        x: (ndc.x * 0.5 + 0.5) * size.width,
+        y: (1 - (ndc.y * 0.5 + 0.5)) * size.height,
+      })
+
+      const sitePx = toPx(siteNdc)
+      const arrowPx = toPx(arrowNdc)
+
+      debugLog({
+        location: "src/features/map/ui/campsite-scene-3d.tsx:BookingArrow",
+        message: "Projection delta (site center vs arrow anchor)",
+        data: {
+          siteId: MY_BOOKED_SITE_ID,
+          size: { w: size.width, h: size.height },
+          siteWorld: { x: siteWorld.x, y: siteWorld.y, z: siteWorld.z },
+          arrowWorld: { x: arrowWorld.x, y: arrowWorld.y, z: arrowWorld.z },
+          sitePx,
+          arrowPx,
+          deltaPx: { dx: arrowPx.x - sitePx.x, dy: arrowPx.y - sitePx.y },
+          cameraPos: {
+            x: camera.position.x,
+            y: camera.position.y,
+            z: camera.position.z,
+          },
+        },
+        hypothesisId: "C",
+        runId: "post-fix",
+      })
+    }
+  })
+
+  return (
+    <group ref={groupRef} position={[x, BASE_Y, z]}>
+      {/* 화살표 줄기 */}
+      <mesh position={[0, 0.5, 0]}>
+        <cylinderGeometry args={[0.12, 0.12, 1.0, 8]} />
+        <meshLambertMaterial color="#fbbf24" />
+      </mesh>
+      {/* 화살표 헤드 (아래를 향한 원뿔) */}
+      <mesh position={[0, -0.1, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.32, 0.7, 8]} />
+        <meshLambertMaterial color="#f59e0b" />
+      </mesh>
+      {/* 발광 링 */}
+      <mesh position={[0, -0.45, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.45, 0.06, 8, 24]} />
+        <meshLambertMaterial color="#fde68a" />
+      </mesh>
+      {/* "내 자리" 라벨 */}
+      <Text
+        position={[0, 1.3, 0]}
+        fontSize={0.38}
+        color="#fbbf24"
+        anchorX="center"
+        anchorY="middle"
+        outlineWidth={0.06}
+        outlineColor="#000000"
+      >
+        내 자리
+      </Text>
+    </group>
+  )
+}
+
 /* ─── Tree ──────────────────────────────────────────────── */
 function Tree({ x, z }: { x: number; z: number }) {
   return (
@@ -115,6 +246,7 @@ function Stream() {
 function SiteMesh({ site, onClick }: { site: Site; onClick: (s: Site) => void }) {
   const [hovered, setHovered] = useState(false)
   const meshRef = useRef<THREE.Mesh>(null)
+  const didLog = useRef(false)
 
   useFrame(() => {
     if (!meshRef.current) return
@@ -127,6 +259,29 @@ function SiteMesh({ site, onClick }: { site: Site; onClick: (s: Site) => void })
 
   const color = hovered ? "#facc15" : STATUS_COLOR[site.status]
   const w = site.size === "대형" ? 3.2 : site.size === "중형" ? 2.6 : 2.0
+
+  useEffect(() => {
+    if (site.id !== MY_BOOKED_SITE_ID) return
+    if (didLog.current) return
+    didLog.current = true
+    const centerWorld = meshRef.current
+      ? meshRef.current.getWorldPosition(new THREE.Vector3())
+      : null
+    debugLog({
+      location: "src/features/map/ui/campsite-scene-3d.tsx:SiteMesh",
+      message: "Booked site mesh mounted (world center + dims)",
+      data: {
+        siteId: site.id,
+        groupPos: { x: site.x, z: site.z },
+        boxDims: { w, d: w * 0.85, h: 0.28 },
+        meshWorld: centerWorld
+          ? { x: centerWorld.x, y: centerWorld.y, z: centerWorld.z }
+          : null,
+      },
+      hypothesisId: "A",
+      runId: "baseline",
+    })
+  }, [site.id, site.x, site.z, w])
 
   return (
     <group position={[site.x, 0, site.z]}>
@@ -229,6 +384,21 @@ function Scene({ onSelect }: { onSelect: (site: Site | null) => void }) {
     return positions
   }, [])
 
+  useEffect(() => {
+    const booked = SITES.find((s) => s.id === MY_BOOKED_SITE_ID) ?? null
+    debugLog({
+      location: "src/features/map/ui/campsite-scene-3d.tsx:Scene",
+      message: "Scene mounted (booked site data)",
+      data: {
+        booked,
+        sitesCount: SITES.length,
+        facilitiesCount: FACILITIES.length,
+      },
+      hypothesisId: "B",
+      runId: "baseline",
+    })
+  }, [])
+
   return (
     <>
       <Sky sunPosition={[100, 80, 100]} />
@@ -255,6 +425,11 @@ function Scene({ onSelect }: { onSelect: (site: Site | null) => void }) {
 
       {SITES.map((site) => (
         <SiteMesh key={site.id} site={site} onClick={onSelect} />
+      ))}
+
+      {/* 내가 예약한 사이트 위 입체 화살표 */}
+      {SITES.filter((s) => s.id === MY_BOOKED_SITE_ID).map((s) => (
+        <BookingArrow key={`arrow-${s.id}`} x={s.x} z={s.z} />
       ))}
 
       {FACILITIES.map((f) => (

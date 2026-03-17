@@ -31,6 +31,7 @@ import {
   BellRing,
   Clock,
   Settings,
+  UtensilsCrossed,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -77,7 +78,7 @@ const navigationItems = [
     icon: BookOpen,
   },
   {
-    title: '맵',
+    title: '캠핑장지도',
     url: '/map',
     icon: MapIcon,
   },
@@ -142,7 +143,7 @@ export function NotificationsPage() {
             <SidebarGroupLabel>메뉴</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {navigationItems.map((item) => {
+                {navigationItems.slice(0, -1).map((item) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.url;
                   return (
@@ -165,6 +166,22 @@ export function NotificationsPage() {
                     </SidebarMenuItem>
                   );
                 })}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/cooking'} tooltip="미식조리현황">
+                    <Link href="/cooking">
+                      <UtensilsCrossed />
+                      <span>미식조리현황</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/notifications'} tooltip="알림">
+                    <Link href="/notifications">
+                      <Bell />
+                      <span>알림</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -202,19 +219,6 @@ export function NotificationsPage() {
               <NotificationList notifications={filteredNotifications} />
             </TabsContent>
           </Tabs>
-
-          {/* 알림 설정 (향후 구현) */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5" />
-                알림 설정
-              </CardTitle>
-              <CardDescription>
-                알림 수신 설정을 관리하세요 (향후 구현 예정)
-              </CardDescription>
-            </CardHeader>
-          </Card>
         </div>
       </SidebarInset>
     </SidebarProvider>

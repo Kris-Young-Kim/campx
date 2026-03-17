@@ -39,6 +39,7 @@ import {
   Loader2,
   CheckCircle2,
   CalendarDays,
+  UtensilsCrossed,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -89,7 +90,7 @@ const navigationItems = [
     icon: BookOpen,
   },
   {
-    title: '맵',
+    title: '캠핑장지도',
     url: '/map',
     icon: MapIcon,
   },
@@ -209,7 +210,7 @@ export function DashboardPage() {
             <SidebarGroupLabel>메뉴</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {navigationItems.map((item) => {
+                {navigationItems.slice(0, -1).map((item) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.url;
                   return (
@@ -227,6 +228,22 @@ export function DashboardPage() {
                     </SidebarMenuItem>
                   );
                 })}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/cooking'} tooltip="미식조리현황">
+                    <Link href="/cooking">
+                      <UtensilsCrossed />
+                      <span>미식조리현황</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/notifications'} tooltip="알림">
+                    <Link href="/notifications">
+                      <Bell />
+                      <span>알림</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -242,10 +259,9 @@ export function DashboardPage() {
             </p>
           </div>
 
-          {/* 예약 현황 카드 */}
+          {/* 예약 현황 + 빠른 액션 */}
           <div className="grid gap-4 md:grid-cols-2">
-            {/* 다음 예약 */}
-            {nextBooking && (
+              {/* 다음 예약 */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -254,92 +270,86 @@ export function DashboardPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="text-lg font-semibold">
-                        {format(new Date(nextBooking.checkIn), 'yyyy년 MM월 dd일', { locale: ko })} ~{' '}
-                        {format(new Date(nextBooking.checkOut), 'yyyy년 MM월 dd일', { locale: ko })}
+                  {nextBooking ? (
+                    <div className="space-y-3">
+                      <div>
+                        <div className="text-lg font-semibold">
+                          {format(new Date(nextBooking.checkIn), 'yyyy년 MM월 dd일', { locale: ko })} ~{' '}
+                          {format(new Date(nextBooking.checkOut), 'yyyy년 MM월 dd일', { locale: ko })}
+                        </div>
+                        <Badge className={statusConfig[nextBooking.status]?.color || ''}>
+                          {statusConfig[nextBooking.status]?.label || nextBooking.status}
+                        </Badge>
                       </div>
-                      <Badge className={statusConfig[nextBooking.status]?.color || ''}>
-                        {statusConfig[nextBooking.status]?.label || nextBooking.status}
-                      </Badge>
+                      {isTomorrow(new Date(nextBooking.checkIn)) && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Clock className="h-4 w-4" />
+                          <span>내일 체크인 예정</span>
+                        </div>
+                      )}
+                      <Button asChild className="w-full">
+                        <Link href={`/bookings/${nextBooking.id}`}>
+                          예약 상세 보기
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
                     </div>
-                    {isTomorrow(new Date(nextBooking.checkIn)) && (
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4" />
-                        <span>내일 체크인 예정</span>
-                      </div>
-                    )}
-                    <Button asChild className="w-full">
-                      <Link href={`/bookings/${nextBooking.id}`}>
-                        예약 상세 보기
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-6 text-center gap-3">
+                      <CalendarDays className="h-10 w-10 text-muted-foreground/40" />
+                      <p className="text-sm text-muted-foreground">예정된 예약이 없습니다</p>
+                      <Button asChild size="sm">
+                        <Link href="/bookings/new">
+                          <Plus className="mr-2 h-4 w-4" />
+                          새 예약 만들기
+                        </Link>
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
-            )}
 
-            {/* 진행 중인 예약 */}
-            {activeBooking ? (
-              <Card className="border-primary/50 bg-primary/5">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                    진행 중인 예약
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="text-lg font-semibold">
-                        {format(new Date(activeBooking.checkIn), 'yyyy년 MM월 dd일', { locale: ko })} ~{' '}
-                        {format(new Date(activeBooking.checkOut), 'yyyy년 MM월 dd일', { locale: ko })}
-                      </div>
-                      <Badge className="bg-green-500/10 text-green-700 dark:text-green-400">
-                        체크인 완료
-                      </Badge>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button asChild variant="outline" className="flex-1">
-                        <Link href={`/stay/${activeBooking.id}`}>Stay 보기</Link>
-                      </Button>
-                      <Button asChild variant="outline" className="flex-1">
-                        <Link href={`/schedule`}>스케줄 보기</Link>
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
+              {/* 빠른 액션 */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5" />
-                    진행 중인 예약
+                    <Sparkles className="h-5 w-5" />
+                    빠른 액션
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <Calendar className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                    <p className="text-sm text-muted-foreground mb-4">
-                      진행 중인 예약이 없습니다
-                    </p>
-                    <Button asChild>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button asChild variant="outline" className="h-auto flex-col gap-1 py-3">
                       <Link href="/bookings/new">
-                        <Plus className="mr-2 h-4 w-4" />
-                        새 예약 만들기
+                        <Plus className="h-5 w-5" />
+                        <span className="text-xs">새 예약</span>
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="h-auto flex-col gap-1 py-3">
+                      <Link href="/schedule">
+                        <Calendar className="h-5 w-5" />
+                        <span className="text-xs">스케줄</span>
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="h-auto flex-col gap-1 py-3">
+                      <Link href="/map">
+                        <MapPin className="h-5 w-5" />
+                        <span className="text-xs">캠핑장 지도</span>
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="h-auto flex-col gap-1 py-3">
+                      <Link href="/notifications">
+                        <Bell className="h-5 w-5" />
+                        <span className="text-xs">알림</span>
                       </Link>
                     </Button>
                   </div>
                 </CardContent>
               </Card>
-            )}
-          </div>
+            </div>
 
           {/* 활성 스케줄 미리보기 */}
-          {activeSchedule && activeBooking && (
+          {activeSchedule && activeBooking ? (
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -389,43 +399,7 @@ export function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          )}
-
-          {/* 빠른 액션 */}
-          <Card>
-            <CardHeader>
-              <CardTitle>빠른 액션</CardTitle>
-              <CardDescription>자주 사용하는 기능에 빠르게 접근하세요</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-                <Button asChild variant="outline" className="h-auto flex-col gap-2 py-4">
-                  <Link href="/bookings/new">
-                    <Plus className="h-6 w-6" />
-                    <span>새 예약</span>
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-auto flex-col gap-2 py-4">
-                  <Link href="/schedule">
-                    <Calendar className="h-6 w-6" />
-                    <span>스케줄 보기</span>
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-auto flex-col gap-2 py-4">
-                  <Link href="/bookings">
-                    <BookOpen className="h-6 w-6" />
-                    <span>예약 목록</span>
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="h-auto flex-col gap-2 py-4">
-                  <Link href="/notifications">
-                    <Bell className="h-6 w-6" />
-                    <span>알림 확인</span>
-                  </Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          ) : null}
 
           {/* 예약 통계 */}
           {bookings.length > 0 && (

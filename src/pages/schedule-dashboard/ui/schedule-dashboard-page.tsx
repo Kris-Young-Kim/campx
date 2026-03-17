@@ -22,7 +22,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Calendar, Map as MapIcon, Loader2, Home, LayoutDashboard, User } from 'lucide-react';
+import { Calendar, Map as MapIcon, Loader2, Home, LayoutDashboard, User, Bell, BookOpen, UtensilsCrossed } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
@@ -68,6 +68,21 @@ const navigationItems = [
     title: '스케줄',
     url: '/schedule',
     icon: Calendar,
+  },
+  {
+    title: '예약',
+    url: '/bookings',
+    icon: BookOpen,
+  },
+  {
+    title: '캠핑장지도',
+    url: '/map',
+    icon: MapIcon,
+  },
+  {
+    title: '알림',
+    url: '/notifications',
+    icon: Bell,
   },
 ];
 
@@ -230,7 +245,7 @@ export function ScheduleDashboardPage() {
             <SidebarGroupLabel>메뉴</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {navigationItems.map((item) => {
+                {navigationItems.slice(0, -1).map((item) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.url;
                   return (
@@ -248,6 +263,22 @@ export function ScheduleDashboardPage() {
                     </SidebarMenuItem>
                   );
                 })}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/cooking'} tooltip="미식조리현황">
+                    <Link href="/cooking">
+                      <UtensilsCrossed />
+                      <span>미식조리현황</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === '/notifications'} tooltip="알림">
+                    <Link href="/notifications">
+                      <Bell />
+                      <span>알림</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
