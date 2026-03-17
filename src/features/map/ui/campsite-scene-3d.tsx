@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, useMemo } from "react"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
+import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls, Text, Html, Sky } from "@react-three/drei"
 import * as THREE from "three"
 
@@ -99,95 +99,91 @@ const FACILITY_COLOR: Record<Facility["type"], string> = {
   entrance: "#94a3b8",
 }
 
-/* ─── Booking Arrow ──────────────────────────────────────── */
-function BookingArrow({ x, z }: { x: number; z: number }) {
+/* ─── Minecraft Robot ────────────────────────────────────── */
+function MinecraftRobot({ x, z }: { x: number; z: number }) {
   const groupRef = useRef<THREE.Group>(null)
+  const leftArmRef = useRef<THREE.Mesh>(null)
+  const rightArmRef = useRef<THREE.Mesh>(null)
   const t = useRef(0)
-  const didLog = useRef(false)
-  const didProjectLog = useRef(false)
-  const { camera, size } = useThree()
   const BASE_Y = 1.8
-  const BOB_AMPLITUDE = 0.22
-
-  useEffect(() => {
-    if (didLog.current) return
-    didLog.current = true
-    debugLog({
-      location: "src/features/map/ui/campsite-scene-3d.tsx:BookingArrow",
-      message: "BookingArrow mounted (world anchor)",
-      data: { siteId: MY_BOOKED_SITE_ID, x, z, yBase: BASE_Y, bob: BOB_AMPLITUDE },
-      hypothesisId: "A",
-      runId: "baseline",
-    })
-  }, [x, z])
+  const BOB_AMPLITUDE = 0.18
 
   useFrame((_, delta) => {
-    t.current += delta * 2
+    t.current += delta * 2.2
     if (groupRef.current) {
       groupRef.current.position.y = BASE_Y + Math.sin(t.current) * BOB_AMPLITUDE
     }
-
-    if (!didProjectLog.current) {
-      didProjectLog.current = true
-
-      // C3 사이트 메시 중심(y=0.15)과 화살표 앵커(y=3.2)의 화면상(픽셀) 차이를 측정
-      const siteWorld = new THREE.Vector3(x, 0.15, z)
-      const arrowWorld = new THREE.Vector3(x, BASE_Y, z)
-      const siteNdc = siteWorld.clone().project(camera)
-      const arrowNdc = arrowWorld.clone().project(camera)
-
-      const toPx = (ndc: THREE.Vector3) => ({
-        x: (ndc.x * 0.5 + 0.5) * size.width,
-        y: (1 - (ndc.y * 0.5 + 0.5)) * size.height,
-      })
-
-      const sitePx = toPx(siteNdc)
-      const arrowPx = toPx(arrowNdc)
-
-      debugLog({
-        location: "src/features/map/ui/campsite-scene-3d.tsx:BookingArrow",
-        message: "Projection delta (site center vs arrow anchor)",
-        data: {
-          siteId: MY_BOOKED_SITE_ID,
-          size: { w: size.width, h: size.height },
-          siteWorld: { x: siteWorld.x, y: siteWorld.y, z: siteWorld.z },
-          arrowWorld: { x: arrowWorld.x, y: arrowWorld.y, z: arrowWorld.z },
-          sitePx,
-          arrowPx,
-          deltaPx: { dx: arrowPx.x - sitePx.x, dy: arrowPx.y - sitePx.y },
-          cameraPos: {
-            x: camera.position.x,
-            y: camera.position.y,
-            z: camera.position.z,
-          },
-        },
-        hypothesisId: "C",
-        runId: "post-fix",
-      })
-    }
+    // 팔 흔들기
+    const swing = Math.sin(t.current * 1.4) * 0.5
+    if (leftArmRef.current) leftArmRef.current.rotation.x = swing
+    if (rightArmRef.current) rightArmRef.current.rotation.x = -swing
   })
 
   return (
     <group ref={groupRef} position={[x, BASE_Y, z]}>
-      {/* 화살표 줄기 */}
-      <mesh position={[0, 0.5, 0]}>
-        <cylinderGeometry args={[0.12, 0.12, 1.0, 8]} />
+      {/* 다리 왼쪽 */}
+      <mesh position={[-0.18, -0.62, 0]}>
+        <boxGeometry args={[0.28, 0.52, 0.28]} />
+        <meshLambertMaterial color="#1d4ed8" />
+      </mesh>
+      {/* 다리 오른쪽 */}
+      <mesh position={[0.18, -0.62, 0]}>
+        <boxGeometry args={[0.28, 0.52, 0.28]} />
+        <meshLambertMaterial color="#1d4ed8" />
+      </mesh>
+      {/* 몸통 */}
+      <mesh position={[0, -0.1, 0]}>
+        <boxGeometry args={[0.72, 0.72, 0.38]} />
+        <meshLambertMaterial color="#475569" />
+      </mesh>
+      {/* 가슴 패널 */}
+      <mesh position={[0, -0.08, 0.2]}>
+        <boxGeometry args={[0.42, 0.38, 0.04]} />
+        <meshLambertMaterial color="#0ea5e9" />
+      </mesh>
+      {/* 왼팔 */}
+      <mesh ref={leftArmRef} position={[-0.52, -0.1, 0]}>
+        <boxGeometry args={[0.26, 0.62, 0.26]} />
+        <meshLambertMaterial color="#64748b" />
+      </mesh>
+      {/* 오른팔 */}
+      <mesh ref={rightArmRef} position={[0.52, -0.1, 0]}>
+        <boxGeometry args={[0.26, 0.62, 0.26]} />
+        <meshLambertMaterial color="#64748b" />
+      </mesh>
+      {/* 머리 */}
+      <mesh position={[0, 0.56, 0]}>
+        <boxGeometry args={[0.72, 0.72, 0.72]} />
+        <meshLambertMaterial color="#94a3b8" />
+      </mesh>
+      {/* 눈 왼쪽 */}
+      <mesh position={[-0.18, 0.62, 0.37]}>
+        <boxGeometry args={[0.18, 0.14, 0.04]} />
+        <meshLambertMaterial color="#7dd3fc" />
+      </mesh>
+      {/* 눈 오른쪽 */}
+      <mesh position={[0.18, 0.62, 0.37]}>
+        <boxGeometry args={[0.18, 0.14, 0.04]} />
+        <meshLambertMaterial color="#7dd3fc" />
+      </mesh>
+      {/* 입 */}
+      <mesh position={[0, 0.44, 0.37]}>
+        <boxGeometry args={[0.32, 0.08, 0.04]} />
+        <meshLambertMaterial color="#1e293b" />
+      </mesh>
+      {/* 안테나 */}
+      <mesh position={[0, 1.06, 0]}>
+        <boxGeometry args={[0.08, 0.22, 0.08]} />
+        <meshLambertMaterial color="#94a3b8" />
+      </mesh>
+      <mesh position={[0, 1.2, 0]}>
+        <boxGeometry args={[0.16, 0.16, 0.16]} />
         <meshLambertMaterial color="#fbbf24" />
-      </mesh>
-      {/* 화살표 헤드 (아래를 향한 원뿔) */}
-      <mesh position={[0, -0.1, 0]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[0.32, 0.7, 8]} />
-        <meshLambertMaterial color="#f59e0b" />
-      </mesh>
-      {/* 발광 링 */}
-      <mesh position={[0, -0.45, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.45, 0.06, 8, 24]} />
-        <meshLambertMaterial color="#fde68a" />
       </mesh>
       {/* "내 자리" 라벨 */}
       <Text
-        position={[0, 1.3, 0]}
-        fontSize={0.38}
+        position={[0, 1.55, 0]}
+        fontSize={0.35}
         color="#fbbf24"
         anchorX="center"
         anchorY="middle"
@@ -427,9 +423,9 @@ function Scene({ onSelect }: { onSelect: (site: Site | null) => void }) {
         <SiteMesh key={site.id} site={site} onClick={onSelect} />
       ))}
 
-      {/* 내가 예약한 사이트 위 입체 화살표 */}
+      {/* 내가 예약한 사이트 위 마인크래프트 로봇 */}
       {SITES.filter((s) => s.id === MY_BOOKED_SITE_ID).map((s) => (
-        <BookingArrow key={`arrow-${s.id}`} x={s.x} z={s.z} />
+        <MinecraftRobot key={`robot-${s.id}`} x={s.x} z={s.z} />
       ))}
 
       {FACILITIES.map((f) => (
