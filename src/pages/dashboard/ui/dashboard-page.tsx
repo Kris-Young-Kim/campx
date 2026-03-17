@@ -343,6 +343,12 @@ export function DashboardPage() {
                         <span className="text-xs">알림</span>
                       </Link>
                     </Button>
+                    <Button asChild variant="outline" className="h-auto flex-col gap-1 py-3 col-span-2">
+                      <Link href="/cooking">
+                        <UtensilsCrossed className="h-5 w-5" />
+                        <span className="text-xs">미식조리현황</span>
+                      </Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
