@@ -43,7 +43,6 @@ export function SocialProofSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p className="text-muted-foreground mb-8">50개 이상의 캠핑장이 함께합니다</p>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
             {partners.map((partner, index) => (
               <motion.div
